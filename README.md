@@ -10,7 +10,7 @@ Both synapse and corresponding dendrite are detected. Synapses are detected on s
 ![Overview of AQuA](img/flow.png)
 
 # Getting started
-1. Download the Fiji plugins. For 2D data, download SynQuant.jar. For 3D data, download SynQuant3D.jar.
+1. Download the Fiji plugins. For 2D data, download [this](SynQuant_-1.2.jar). For 3D data, download [this](SynQuantVid_-0.0.1-SNAPSHOT.jar).
 2. Put the downloaded jar file to the plugin folder of Fiji.
 3. Open Fiji and load the data. Then open SynQuant from the plugins menu.
 
