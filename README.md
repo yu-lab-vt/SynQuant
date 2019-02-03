@@ -29,7 +29,6 @@ SynQuant detect synapses through a totally unsupervised probability principled f
 * Version 1.2 allows for the detection of pre-, post-synaptic puncta and synaptic sites. It can output ROI regions through ROI manager now and user could save the mask by themselves. The quantification can be done based on detected synapses or synaptic sites.
 * Add support for 3D data.
 
-# How to cite
-The journal paper is in preparation. You can cite the conference paper first:
+# Reference
+Yizhi Wang, Congchao Wang, Petter Ranefall, Gerard Broussard, Yinxue Wang, Guilai Shi, Yue Wang, Lin Tian, Guoqiang Yu, *SynQuant: An Automatic Tool to Quantify Synapses from Microscopy Images*, BioRxiv 538769; doi: https://doi.org/10.1101/538769
 
-Yizhi Wang, Guilai Shi, Yinxue Wang, Lin Tian, Guoqiang Yu*, “PPSD: Probability Principled Synapse Detection,” BioImage Informatics Conference 2015, October 2015.
