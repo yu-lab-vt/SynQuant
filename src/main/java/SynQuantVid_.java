@@ -277,11 +277,21 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		}
 		if(den_imp != null) {
 			if (den_imp.getNSlices() == 1 & imp.getNSlices() == 1) { //do quantification
-				boolean [][] kSynR1 = new boolean [sliderSynMap[0].length][sliderSynMap[0][0].length];
-				for (int i=0; i<kSynR1.length; i++)
-				{
-					for(int j=0; j<kSynR1[0].length;j++) {
-						kSynR1[i][j] = sliderSynMap[0][i][j] > 0;
+				boolean [][] kSynR1 = new boolean [synZscore[0][0].length][synZscore[0][0][0].length];
+				if (sliderSynMap == null) {
+					for (int i=0; i<kSynR1.length; i++)
+					{
+						for(int j=0; j<kSynR1[0].length;j++) {
+							kSynR1[i][j] = synZscore[0][0][i][j]>zscore_thres;
+						}
+					}
+				}
+				else {
+					for (int i=0; i<kSynR1.length; i++)
+					{
+						for(int j=0; j<kSynR1[0].length;j++) {
+							kSynR1[i][j] = sliderSynMap[0][i][j] > 0;
+						}
 					}
 				}
 				LinearTest LT = new LinearTest(kSynR1,den_det);
