@@ -68,10 +68,10 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		// Get input parameter
 		GenericDialog gd = new GenericDialog("3D Particles - Data and Parameter Setting");
 		//gd.addNumericField("FDR Control for Particle Detection: ", 0.05, 3);//2.5-3.5 good
-		gd.addNumericField("Z-Score for Particle Detection: ", 1.65, 2);//2.5-3.5 good
+		gd.addNumericField("Z-Score for Particle Detection: ", 1.65,  2);//2.5-3.5 good
 		gd.addNumericField("Min Particle Size: ", 10, 0);//2.5-3.5 good
 		gd.addNumericField("Max Particle Size: ", 200, 0);//2.5-3.5 good
-		gd.addNumericField("Min fill: ", 0.25, 2);//2.5-3.5 good
+		gd.addNumericField("Min fill: ", 0.50, 2);//2.5-3.5 good
 		gd.addNumericField("Max WH Ratio: ", 2, 0);//2.5-3.5 good
 		// Get the pointer to the pre-channel and post-channel
 		int[] activeImageIDs = WindowManager.getIDList(); // get all acitve images
@@ -139,7 +139,7 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 	 * ***/
 	public void synQuant3D_real() {
 		//// parameter initialization
-		paraQ3D q = new paraQ3D(numChannels, 0.05);
+		paraQ3D q = new paraQ3D(numChannels, 0.90);
 		BasicMath bm = new BasicMath();
 		//// data saving final results
 //		timePts = imp.getNFrames();
@@ -237,22 +237,38 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		}
 		//// wait to listen the change of z-score threshold
 		GenericDialog gd = new NonBlockingGenericDialog("Tune zscore threshold");
-		gd.addSlider("zscore threshold tuning", 0, 100, Math.max(0, slideThrZ));
+		gd.addSlider("zscore threshold tuning", Math.max(0, slideThrZ), 100, Math.max(0, slideThrZ));
 		// wait to listen for the changing of zscore threshold
+		sliderSynMap = null;
 		gd.addDialogListener(this);
 
 		//dialogItemChanged (gd, null);
 		gd.showDialog();
 		if (imp.getNSlices() == 1) { // use ROI manager to display results
 			ImageHandling IH = new ImageHandling();
-			boolean [][] synMap2dBin = new boolean[sliderSynMap[0].length][sliderSynMap[0][0].length];
-			for (int i=0; i<sliderSynMap[0].length; i++) {
-				for (int j=0; j<sliderSynMap[0][0].length;j++) {
-					if(sliderSynMap[0][i][j]>0) {
-						synMap2dBin[i][j] = true;
+			boolean [][] synMap2dBin = new boolean[synZscore[0][0].length][synZscore[0][0][0].length];
+			if (sliderSynMap == null) {
+				for (int i=0; i<synZscore[0][0].length; i++) {
+					for (int j=0; j<synZscore[0][0][0].length;j++) {
+						if(synZscore[0][0][i][j]>zscore_thres) {
+							synMap2dBin[i][j] = true;
+						}
+						else {
+							synMap2dBin[i][j] = false;
+						}
 					}
-					else {
-						synMap2dBin[i][j] = false;
+				}
+			}
+			else {
+				//boolean [][] synMap2dBin = new boolean[sliderSynMap[0].length][sliderSynMap[0][0].length];
+				for (int i=0; i<sliderSynMap[0].length; i++) {
+					for (int j=0; j<sliderSynMap[0][0].length;j++) {
+						if(sliderSynMap[0][i][j]>0) {
+							synMap2dBin[i][j] = true;
+						}
+						else {
+							synMap2dBin[i][j] = false;
+						}
 					}
 				}
 			}
@@ -321,7 +337,6 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 			return true;
 		else
 			slideThrZ = zscore_thres;
-		sliderSynMap = null;
 		//ImageHandling imh = new ImageHandling();
 		//System.out.println("-th Frame SynNum: " + zscore_thres);
 		//outputImp = IJ.createHyperStack("Found Particles", width, height, 1, zSlice, timePts,16/*bitdepth*/);
@@ -465,6 +480,15 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 //				}
 //			}
 //		}
+		double max_intensity = 0;
+		if(imp.getType() == ImagePlus.GRAY16) {
+			for(int stackNum=1; stackNum<=curStack.getSize(); stackNum++) {
+				double tmp_max = curInStack.getProcessor(stackNum).getStatistics().max;
+				if (max_intensity < tmp_max) {
+					max_intensity = tmp_max;
+				}
+			}
+		}
 		for(int stackNum=1; stackNum<=curStack.getSize(); stackNum++) {
 			outIP = curStack.getProcessor(stackNum);
 			inIP = curInStack.getProcessor(stackNum);
@@ -484,7 +508,7 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 					}else {
 //						if(inIP.get(i, j)>255*10)
 //							System.out.println(" "+inIP.get(i, j));
-						byte tmp_float_val = (byte) ((((double)inIP.get(i, j))/65535.0)*255);
+						byte tmp_float_val = (byte) ((((double)inIP.get(i, j))/max_intensity)*255);
 						int tmp_val = (int)tmp_float_val & 0xff;
 						
 						if(kSynR1[stackNum-1][j][i]>0)

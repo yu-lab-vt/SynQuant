@@ -16,8 +16,11 @@ Both synapse and corresponding dendrite are detected. Synapses are detected on s
 
 For more details, download our user guide [here](https://drive.google.com/file/d/1YND2SoC8yUhU6LBVBY-8TO1Wul8f0TnO/view?usp=sharing).
 
-# Example data
-Download the example data [here](https://drive.google.com/open?id=1SzF_MH1WfvB3ZRiE6jyYaoaHuc1nrhul).
+# Synthetic data and real data in [1]
+The experiments in [1] were done on both synthetic data and real data. The codes for generating synthetic data and detailed analysis for both synthetic and real data can be found [here](https://github.com/yu-lab-vt/SynQuant-data);
+
+# Example data for testing SynQuant
+Example data for testing SynQuant plugin can be found [here](https://drive.google.com/open?id=1SzF_MH1WfvB3ZRiE6jyYaoaHuc1nrhul).
 
 # Algorithm overview
 SynQuant detect synapses through a totally unsupervised probability principled framework. In this framework, analysis is conducted on salient regions rather than pixels. All synapse candidates are scored by their own local contrast and compared fairly with each other. What’s more, false discover rate (FDR) control is utilized to determine synapse selection, which not only controls the false positive rate but also provides a statistical evidence of the detected synapse. The parameter used in this framework is only the value of FDR which is easy to tune. The framework of synapse detection algorithm now is based on the idea of component tree. SynQuant extracts dendrite by steerable filter. Extracted dendrite then are segmented into roughly homogeneous pieces by branch points and end points. Based on the dendrite pieces and synapses, linear regression is used to find the effects of dendrite’s properties to the number of synapses on it.
@@ -38,5 +41,5 @@ Version 1.2
 * Add a slider for user to post-process results based on z-score.
 
 # Reference
-Yizhi Wang, Congchao Wang, Petter Ranefall, Gerard Broussard, Yinxue Wang, Guilai Shi, Yue Wang, Lin Tian, Guoqiang Yu, *SynQuant: An Automatic Tool to Quantify Synapses from Microscopy Images*, BioRxiv 538769; doi: https://doi.org/10.1101/538769
+[1] Yizhi Wang, Congchao Wang, Petter Ranefall, Gerard Broussard, Yinxue Wang, Guilai Shi, Yue Wang, Lin Tian, Guoqiang Yu, *SynQuant: An Automatic Tool to Quantify Synapses from Microscopy Images*, BioRxiv 538769; doi: https://doi.org/10.1101/538769
 

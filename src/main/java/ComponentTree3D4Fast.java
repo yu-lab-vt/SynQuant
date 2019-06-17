@@ -382,7 +382,7 @@ public class ComponentTree3D4Fast{
 			if(y==276 && x==73) {
 				System.out.println(""+outputArray[i]+" "+areas[i]+" "+voxSum[i]+" "+areasN[i]+" "+voxSumN[i]+" ");
 			}*/
-			if(areas[i]>p.max_size) {
+			if(areas[i]>=p.max_size) {
 				zscore[i] = -1;
 				outputArray[i] = NOT_OBJECT;
 			}else if(areas[i]<p.min_size || ratio>p.maxWHratio || (areas[i]/(double)(LH*LW*LZ))<p.minfill) {
@@ -804,8 +804,19 @@ public class ComponentTree3D4Fast{
 			N = p.min_size;
 		
 		double mu, sigma;
-		
-		if(M>pMu.length || N>pMu[0].length) {
+//		double scalefactor = 1;
+//		while(M>=pMu.length || N>=pMu[0].length) {
+//			M = M/10;
+//			scalefactor = scalefactor*Math.sqrt(10);
+//		}
+//		mu = pMu[M-1][N-1]*scalefactor;
+//		
+//		scalefactor = 1;
+//		while(N>=pMu[0].length) {
+//			
+//		}
+//		
+		if (M>=pMu.length || N>=pMu[0].length) {
 			mu = p.CalMu(M,N,1000);
 			sigma = p.CalSigma(M,N,1000);
 		}else {

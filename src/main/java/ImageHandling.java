@@ -1899,8 +1899,6 @@ public class ImageHandling {
 			for (int j = 1; j < Org_Im[0].length-1; j++) {
 				idx = (i-1) * (Org_Im[0].length-1) + (j-1);
 				curLevel = (int)Math.floor((zsmo[i][j]-min_sm_val)/delta0);
-				if (curLevel >= nLevels)
-					curLevel = curLevel + 1 - 1;
 				xMean[curLevel] += zsmo[i][j];
 				diffMean[curLevel] += diff[idx];
 				eleCnt[curLevel] ++;
@@ -1986,8 +1984,18 @@ public class ImageHandling {
 		}
 		
 		qq.var = var1*255*255;
-		qq.varRatioBased = ((A[(int)Math.round(nLevels * qq.varRatio)][0])*alpha+sigma2)*255*255;
-		
+		double cumuEleCnt = 0;
+		double totalEleCnt = (double) (Org_Im[0].length * Org_Im.length - eleCnt[0]);
+		int tgLevel = (int)Math.round(nLevels * 0.05);
+		for (int i=1; i<eleCnt.length;i++) {
+			if ((cumuEleCnt / totalEleCnt) > qq.varRatio & i >= tgLevel) {
+				tgLevel = i;
+				break;
+			}
+			cumuEleCnt += (double)eleCnt[i];
+		}
+		// qq.varRatioBased = ((A[(int)Math.round(nLevels * qq.varRatio)][0])*alpha+sigma2)*255*255;
+		qq.varRatioBased = ((A[tgLevel][0])*alpha+sigma2)*255*255;
 		System.out.println("alpha: "+pEst0[0]+" beta:"+pEst0[1]+" Variance:"+qq.var+"Variance 0.1:"+qq.varRatioBased);
 
 	}
