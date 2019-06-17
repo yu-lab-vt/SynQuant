@@ -10,7 +10,7 @@ Both synapse and corresponding dendrite are detected. Synapses are detected on s
 ![Overview of SynQuant](img/flow.png)
 
 # Getting started
-1. Download the Fiji plugins[this](SynQuantVid_-0.1.2.jar).
+1. Download the Fiji plugin [here](https://github.com/yu-lab-vt/SynQuant/releases).
 2. Put the downloaded jar file to the plugin folder of Fiji.
 3. Open Fiji and load the data. Then open SynQuantVid from the plugins menu.
 
@@ -25,16 +25,17 @@ SynQuant detect synapses through a totally unsupervised probability principled f
 ![Tree based detection and segmentation algorithm](img/tree.png)
 
 # Updates
-* The version 1.1 now
-* 1. Add the component tree structure for synapse detection suggested by Dr.Petter Ranefall. 3 times faster than before
-* 2. output ROI regions overlaid with original synaptic data. Quantification can be done based on detected synapses or synaptic sites.
-* Version 1.2 now allows for 
-* 1. the detection of pre-, post-synaptic puncta and synaptic sites.
-* 2. combination of pre-, post-synaptic puncta detection results.
-* 3. support of puncta detection for both 2D and 3D data in the same plugin.
-* 4. one more noise estimation/stabilization method.
-* 5. two more input parameters for user to tune their targets' shapes.
-* 6. slider for user to post-process results based on z-score.
+Version 1.1
+* Add the component tree structure for synapse detection suggested by Dr.Petter Ranefall. 3 times faster than before
+* Output ROI regions overlaid with original synaptic data. Quantification can be done based on detected synapses or synaptic sites.
+
+Version 1.2
+* Allow for the detection of pre-, post-synaptic puncta and synaptic sites.
+* Add the function of combining pre-, post-synaptic puncta detection results.
+* Support of puncta detection for both 2D and 3D data in the same plugin.
+* Add one more noise estimation/stabilization method.
+* Add two more input parameters for user to tune their targets' shapes.
+* Add a slider for user to post-process results based on z-score.
 
 # Reference
 Yizhi Wang, Congchao Wang, Petter Ranefall, Gerard Broussard, Yinxue Wang, Guilai Shi, Yue Wang, Lin Tian, Guoqiang Yu, *SynQuant: An Automatic Tool to Quantify Synapses from Microscopy Images*, BioRxiv 538769; doi: https://doi.org/10.1101/538769
