@@ -14,7 +14,7 @@ Both synapse and corresponding dendrite are detected. Synapses are detected on s
 2. Put the downloaded jar file to the plugin folder of Fiji.
 3. Open Fiji and load the data. Then open SynQuantVid from the plugins menu.
 
-For more details, download our user guide [here](https://drive.google.com/open?id=1NfSYmmijhB1jGlrvVrfiymRMf93GmPSH).
+For more details, download our user guide [here](https://drive.google.com/file/d/1YND2SoC8yUhU6LBVBY-8TO1Wul8f0TnO/view?usp=sharing).
 
 # Example data
 Download the example data [here](https://drive.google.com/open?id=1SzF_MH1WfvB3ZRiE6jyYaoaHuc1nrhul).
