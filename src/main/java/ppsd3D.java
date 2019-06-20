@@ -23,7 +23,7 @@ public class ppsd3D {
 	protected int zSlice; //image width
 	protected int width; //image width
 	protected int height; //image height
-	protected fastppsdcore3D ppsd_main;
+	public fastppsdcore3D ppsd_main;
 	public ppsd3D(short[][] imArray, int inwidth, int inheight, double vox_x, paraP3D p, paraQ3D q) {
 		
 		/*** STEP 1. Data preparation*******/

@@ -3,9 +3,9 @@ import java.util.Collections;
 
 
 public class fastppsdcore3D{
-	protected int [][][] kMap;//
-	protected double [][][] zMap;
-	protected double thrZ;
+	public int [][][] kMap;//
+	public double [][][] zMap;
+	public double thrZ;
 	protected int nSyn0;
 	protected int zSlice; //image width
 	protected int width; //image width

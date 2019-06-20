@@ -39,7 +39,7 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 //	protected int presyn_chl; // pre-synapse channel number
 //	protected int postsyn_chl; // post-synapse channel number
 //	protected int den_chl; //dendrite channel
-	protected double fdr; // fdr control threshold 
+	protected double fdr = 0.05; // fdr control threshold 
 	protected double zscore_thres = 0;
 	protected int MinSize,MaxSize; // synapse size range
 	protected double minFill, maxWHRatio;

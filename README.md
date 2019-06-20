@@ -7,7 +7,7 @@ SynQuant is especially suitable for data with:
 
 Both synapse and corresponding dendrite are detected. Synapses are detected on synapse channel, where they act as puncta surrounded by highly inhomogeneous interference signals. Dendrite is extracted from the reference dendrite channel.
 
-![Overview of SynQuant](img/flow.png)
+![Overview of SynQuant](img/example data.png)
 
 # Getting started
 1. Download the Fiji plugin [here](https://github.com/yu-lab-vt/SynQuant/releases).
@@ -17,7 +17,7 @@ Both synapse and corresponding dendrite are detected. Synapses are detected on s
 For more details, download our user guide [here](https://drive.google.com/file/d/1YND2SoC8yUhU6LBVBY-8TO1Wul8f0TnO/view?usp=sharing).
 
 # Synthetic data and real data in [1]
-The experiments in [1] were done on both synthetic data and real data. The codes for generating synthetic data and detailed analysis for both synthetic and real data can be found [here](https://github.com/yu-lab-vt/SynQuant-data);
+The experiments in [1] were done on both synthetic data and real data. The codes for generating synthetic data and detailed analysis for both synthetic and real data can be found [here](https://github.com/yu-lab-vt/SynQuant-data).
 
 # Example data for testing SynQuant
 Example data for testing SynQuant plugin can be found [here](https://drive.google.com/open?id=1SzF_MH1WfvB3ZRiE6jyYaoaHuc1nrhul).
