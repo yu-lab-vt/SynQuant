@@ -32,7 +32,7 @@ Please open an issue. We are happy to help!
 * Training an supervised methods is non-trivial: sufficient training labels, experimenting with all kinds of network architectures or feature extraction algorithms, and somehow boring parameter tuning. 
 * **We suggest trying SynQuant on your data before using the supervised methods**.
 
-## Probabilistic driven: give statistical significance to each punctum
+## Statistical significance for each punctum
 * SynQuant is based on order statistics, which assign a p-value or z-score to each puncta. Adjust z-score to trade-off between false positives and false negatives.
 
 ## Easy to use
