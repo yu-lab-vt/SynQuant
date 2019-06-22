@@ -1,15 +1,7 @@
 # Welcome to SynQuant
-SynQuant is a Fiji plugin that automatically quantify synapses from fluorescence microscopy images.
+SynQuant is a Fiji plugin that automatically quantify synapses from fluorescence microscopy images. [Try SynQuant Now!](#Getting-started)
 
-## Getting started
-1. [Downlaod SynQuant](https://github.com/yu-lab-vt/SynQuant/releases). 
-    * If you do not have Fiji yet, get it [here](https://fiji.sc/).
-2. Put the downloaded jar file to the `plugin` folder of Fiji.
-3. Open Fiji and load the image. 
-4. Open `SynQuantVid` from the `plugins` menu.
-5. Check out the [user guide](https://drive.google.com/file/d/1YND2SoC8yUhU6LBVBY-8TO1Wul8f0TnO/view?usp=sharing).
-
-Anything wrong? SynQuant does not work on your data? 
+Any problem? SynQuant does not work on your data? 
 Please open an issue. We are happy to help!
 
 # Why SynQuant
@@ -47,6 +39,15 @@ Please open an issue. We are happy to help!
 3. Open Fiji and load the data. Then open SynQuantVid from the plugins menu.
 
 For more details, download our user guide [here](https://drive.google.com/file/d/1YND2SoC8yUhU6LBVBY-8TO1Wul8f0TnO/view?usp=sharing). -->
+
+# Getting started
+1. [Downlaod SynQuant](https://github.com/yu-lab-vt/SynQuant/releases). 
+    * If you do not have Fiji yet, get it [here](https://fiji.sc/).
+2. Put the downloaded jar file to the `plugin` folder of Fiji.
+3. Open Fiji and load the image. 
+4. Open `SynQuantVid` from the `plugins` menu.
+5. Check out the [user guide](https://drive.google.com/file/d/1YND2SoC8yUhU6LBVBY-8TO1Wul8f0TnO/view?usp=sharing).
+
 
 # Images and datasets
 ## Example images
