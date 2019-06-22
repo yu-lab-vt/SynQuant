@@ -27,7 +27,7 @@ import java.util.TreeMap;
 public class ComponentTree3D4Fast{
 	protected int[] sortedIndex;//store the elements in a new ordered array
 	protected int[] parNode; //Parent nodes
-
+	
 	//for extract highest zscore
 	protected ArrayList<Double> Zscore_Vec;//zscore vector
 	protected ArrayList<Integer> zScoreIdx;
@@ -41,6 +41,7 @@ public class ComponentTree3D4Fast{
 	int width, height, zSlice;
 	int minSize, maxSize;
 	int nPixels, nVoxels;
+	int cpt_nei; // neighbors considered
 	// type 2: deleted after initialization
 	double[] diffN; //Neighborhood difference
 	double[] voxSum; //Pixel sum inside objects
@@ -68,6 +69,7 @@ public class ComponentTree3D4Fast{
 		height = q.Ny;
 		minSize = p.min_size;
 		maxSize = p.max_size;
+		cpt_nei = p.cpt_nei;
 		nVoxels=width*height*zSlice; // voxels in a 3D image
 		nPixels = width*height; //pixels in a single slice
 		imArray = new short[nVoxels];
@@ -324,9 +326,14 @@ public class ComponentTree3D4Fast{
 				y2=Math.min(y+1, height-1);
 				x0=Math.max(x-1,0);
 				x2=Math.min(x+1,width-1);
-				z0=Math.max(z-1,0);
-				z2=Math.min(z+1,zSlice-1);
-				// for neighboring pixels' value we consider 26 neighbors
+				if (cpt_nei == 26) {// if we believe neighbors in z-direction
+					z0=Math.max(z-1,0);
+					z2=Math.min(z+1,zSlice-1);
+				}else { //default: we do not fully believe neighbors in z-direction
+					z0=z;
+					z2=z;
+				}
+				// for neighboring pixels' value
 				for (ii=z2;ii>=z0;ii--) {
 					for (jj=y2;jj>=y0;jj--) {
 						for(kk=x2;kk>=x0;kk--) {
@@ -338,9 +345,9 @@ public class ComponentTree3D4Fast{
 									voxSumN[j] += imArray[tmpIdx];
 									areasN[j]++;
 									usedN[tmpIdx] = USED_AS_N_ONCE;
-									/*if(j==13979) {
-										System.out.print("neighbor val: "+imArray[tmpIdx]+" "+ii +" "+jj+" "+kk+"\n");
-									}*/
+									if(j==6640) {
+										System.out.print("neighbor val: "+imArray[tmpIdx]+" "+ii +" "+jj+" "+kk+" "+areasN[j]+"\n");
+									}
 								}
 						}
 					}
@@ -362,17 +369,17 @@ public class ComponentTree3D4Fast{
 //			z = i / nPixels;
 //			y=rmder/width;
 //			x=rmder-y*width;
-//			if (x==175 & y==81 & z==17) {
+//			if ((x<=17 & x>=15) & (y<=18 & y>=16) & z==0) {
 //				int e = i;
-//
-//				while (imArray[e] > 1 & e != parNode[e]) {
-//					rmder = e % nPixels;
-//					z = e / nPixels;
-//					y=rmder/width;
-//					x=rmder-y*width;
-//					System.out.println("summary: "+z+" "+y+" "+x+" "+"score: "+zscore[e]+" Other "+areas[e]+" "+voxSum[e]+" "+areasN[e]+" "+voxSumN[e]+" ");
-//					e = parNode[e];
-//				}
+//				System.out.println(e+" summary: "+z+" "+y+" "+x+" "+"score: "+zscore[e]+" Other "+areas[e]+" "+voxSum[e]+" "+areasN[e]+" "+voxSumN[e]+" ");
+////				while (imArray[e] > 1 & e != parNode[e]) {
+////					rmder = e % nPixels;
+////					z = e / nPixels;
+////					y=rmder/width;
+////					x=rmder-y*width;
+////					System.out.println(e+" summary: "+z+" "+y+" "+x+" "+"score: "+zscore[e]+" Other "+areas[e]+" "+voxSum[e]+" "+areasN[e]+" "+voxSumN[e]+" ");
+////					e = parNode[e];
+////				}
 //			}
 			double LH = (double)BxCor[i][4]-BxCor[i][1]+1;
 			double LW = (double)BxCor[i][3]-BxCor[i][0]+1;
@@ -388,6 +395,14 @@ public class ComponentTree3D4Fast{
 			}else if(areas[i]<p.min_size || ratio>p.maxWHratio || (areas[i]/(double)(LH*LW*LZ))<p.minfill) {
 				zscore[i] = -1;
 			}else {
+				rmder = i % nPixels;
+				z = i / nPixels;
+				y=rmder/width;
+				x=rmder-y*width;
+				if (i==6640) {//(x<=26 & x>=25) & (y<=29 & y>=27) & z==0) {
+					int e = i; 
+					System.out.println("summary: "+z+" "+y+" "+x+" "+"score: "+zscore[e]+" Other "+areas[e]+" "+voxSum[e]+" "+areasN[e]+" "+voxSumN[e]+" ");
+				}
 				zscore[i] = zscoreCal(diffN[i],areas[i],areasN[i],p,q.var);
 				Zscore_Vec.add(zscore[i]);
 				zScoreIdx.add(i);
@@ -623,7 +638,9 @@ public class ComponentTree3D4Fast{
 		//e1-adjacent; e2-current
 		int res;
 		int m;
-
+		if(e1==6640 | e2==6640) {
+			System.out.print("e1:"+imArray[e1]+" e2:"+imArray[e1] +" "+imArray[e2]+"\n");
+		}
 		if(imArray[e1]==imArray[e2])
 		{
 			res=Math.max(e1,e2);
@@ -649,8 +666,16 @@ public class ComponentTree3D4Fast{
 		int y2=Math.min(y+1, height-1);
 		int x0=Math.max(x-1,0);
 		int x2=Math.min(x+1,width-1);
-		int z0=Math.max(z-1,0);
-		int z2=Math.min(z+1,zSlice-1);
+		int z0,z2;
+		if (cpt_nei == 26) {// if we believe neighbors in z-direction
+			z0=Math.max(z-1,0);
+			z2=Math.min(z+1,zSlice-1);
+		}else { //default: we do not fully believe neighbors in z-direction
+			z0=z;
+			z2=z;
+		}
+
+		
 		// for neighboring pixels' value we consider 26 neighbors
 		//System.out.print("Before Merging"+voxSumN[res]+" "+areasN[res]+" "+"\n");
 		int ii, jj, kk, tmpIdx;
@@ -795,13 +820,13 @@ public class ComponentTree3D4Fast{
 	public double zscoreCal(double t0, int M/*in*/, int N/*nei*/, paraP3D p, double qVar){
 		double[][] pMu = p.mu;
 		double[][] pSigma = p.sigma;
-		
-		if(M < p.min_size)
-			M = p.min_size;
+		// our look up table start from 10 pixel, so the min_size = max(10, p.min_size);
+		if(M < Math.max(p.min_size, 10))
+			M = Math.max(p.min_size, 10);
 		if(N<=p.min_size || N < (M/10))
 			return -1;
-		if(N<p.min_size)
-			N = p.min_size;
+		if(N < Math.max(p.min_size, 10))
+			N = Math.max(p.min_size, 10);
 		
 		double mu, sigma;
 //		double scalefactor = 1;
@@ -826,9 +851,9 @@ public class ComponentTree3D4Fast{
 
 		mu = mu*Math.sqrt(qVar);
 		sigma = sigma*Math.sqrt(qVar);
-		double zScore = (t0-mu)/sigma;
-		t0 = t0/Math.sqrt(qVar);
-		return zScore;
+		//double zScore = (t0-mu)/sigma;
+		//t0 = t0/Math.sqrt(qVar);
+		return (t0-mu)/sigma;
 	}
 	
 	

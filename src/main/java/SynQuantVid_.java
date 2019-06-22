@@ -68,11 +68,11 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		// Get input parameter
 		GenericDialog gd = new GenericDialog("3D Particles - Data and Parameter Setting");
 		//gd.addNumericField("FDR Control for Particle Detection: ", 0.05, 3);//2.5-3.5 good
-		gd.addNumericField("Z-Score for Particle Detection: ", 1.65,  2);//2.5-3.5 good
-		gd.addNumericField("Min Particle Size: ", 10, 0);//2.5-3.5 good
+		gd.addNumericField("Z-Score for Particle Detection: ", 10,  2);//2.5-3.5 good
+		gd.addNumericField("Min Particle Size: ",10, 0);//2.5-3.5 good
 		gd.addNumericField("Max Particle Size: ", 200, 0);//2.5-3.5 good
-		gd.addNumericField("Min fill: ", 0.50, 2);//2.5-3.5 good
-		gd.addNumericField("Max WH Ratio: ", 2, 0);//2.5-3.5 good
+		gd.addNumericField("Min fill: ", 0.5, 2);//2.5-3.5 good
+		gd.addNumericField("Max WH Ratio: ", 4, 0);//2.5-3.5 good
 		// Get the pointer to the pre-channel and post-channel
 		int[] activeImageIDs = WindowManager.getIDList(); // get all acitve images
 		String[] openData = new String[activeImageIDs.length+1]; // save all active images' names
@@ -139,7 +139,7 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 	 * ***/
 	public void synQuant3D_real() {
 		//// parameter initialization
-		paraQ3D q = new paraQ3D(numChannels, 0.90);
+		paraQ3D q = new paraQ3D(numChannels, 0.8);
 		BasicMath bm = new BasicMath();
 		//// data saving final results
 //		timePts = imp.getNFrames();

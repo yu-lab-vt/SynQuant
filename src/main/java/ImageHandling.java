@@ -1771,7 +1771,6 @@ public class ImageHandling {
 				for (int j = 0; j < levelSets.get(i).size(); j++) {
 					// zwapp[(Integer)
 					sum_x = sum_x + zwapp[levelSets.get(i).get(j)[0]][levelSets.get(i).get(j)[1]];
-
 					zwdet0[j] = zwdet[levelSets.get(i).get(j)[0]][levelSets.get(i).get(j)[1]];
 					sum_zwdet0 = sum_zwdet0 + zwdet0[j];
 				}
@@ -1862,26 +1861,54 @@ public class ImageHandling {
 				double_G[i][j] = Org_Im[i][j] / 255;
 
 		// step 2. smoothing
-//		double[][] avgfilter = { {1.0/25, 1.0/25,  1.0/25, 1.0/25,  1.0/25}, {1.0/25, 1.0/25,  1.0/25, 1.0/25,  1.0/25},
-//				{1.0/25, 1.0/25,  1.0/25, 1.0/25,  1.0/25},{1.0/25, 1.0/25,  1.0/25, 1.0/25,  1.0/25},{1.0/25, 1.0/25,  1.0/25, 1.0/25,  1.0/25} };
-		double[][] avgfilter = { {1.0/9, 1.0/9,  1.0/9}, {1.0/9, 1.0/9,  1.0/9},{1.0/9, 1.0/9,  1.0/9}};
-		double[][] zsmo = imfilter(double_G, avgfilter);
+//		double[][] avgfilter = { {1.0/9, 1.0/9,  1.0/9}, {1.0/9, 1.0/9,  1.0/9},{1.0/9, 1.0/9,  1.0/9}};
+//		double[][] zsmo = imfilter(double_G, avgfilter);
+//
+//		double[] diff = new double [(Org_Im.length-1)*(Org_Im[0].length-1)]; //save difference without image Edges
+//		int idx;
+//		double min_sm_val=1, max_sm_val = 0;
+//		for (int i = 1; i < Org_Im.length-1; i++) {
+//			for (int j = 1; j < Org_Im[0].length-1; j++) {
+//				idx = (i-1) * (Org_Im[0].length-1) + (j-1);
+//				diff[idx] = (double_G[i][j] - zsmo[i][j]); // assume average does not have noise; indeed: var(a-1/9*sum(a1..a9) = 10/9 var ==> var = 9/10*x
+//				if (zsmo[i][j] > max_sm_val)
+//					max_sm_val = zsmo[i][j];
+//				if (zsmo[i][j] < min_sm_val)
+//					min_sm_val = zsmo[i][j];
+//			}
+		//		}
 
-		double[] diff = new double [(Org_Im.length-1)*(Org_Im[0].length-1)]; //save difference without image Edges
-		int idx;
+		int delta = 2;
+		double[][] zsmo = new double[Org_Im.length][Org_Im[0].length];
+		for (int i = 2; i < Org_Im.length-2; i++) {
+			for (int j = 2; j < Org_Im[0].length-2; j++) {
+				// 5*5 -3*3 neighbors
+				for (int ii = i-2; ii<= i+2; ii++) {
+					for (int jj = j-2; jj<= j+2; jj++) {
+						if (ii == i-2 | ii == i+2 | jj==j-2 | jj==j+2) {
+							zsmo[i][j] += double_G[ii][jj];
+						}
+					}
+				}
+				zsmo[i][j] = zsmo[i][j] / 16;
+			}
+		}		
+		int idx = 0;
+		double[][] diff = new double [Org_Im.length][Org_Im[0].length]; //save difference without image Edges
 		double min_sm_val=1, max_sm_val = 0;
-		for (int i = 1; i < Org_Im.length-1; i++) {
-			for (int j = 1; j < Org_Im[0].length-1; j++) {
-				idx = (i-1) * (Org_Im[0].length-1) + (j-1);
-				diff[idx] = (double_G[i][j] - zsmo[i][j]); // assume average does not have noise; indeed: var(a-1/9*sum(a1..a9) = 10/9 var ==> var = 9/10*x
+		for (int i = 2; i < Org_Im.length-2; i++) {
+			for (int j = 2; j < Org_Im[0].length-2; j++) {
+				// 5*5 -3*3 neighbors
+				diff[i][j] = (double_G[i][j] - zsmo[i][j]);
 				if (zsmo[i][j] > max_sm_val)
 					max_sm_val = zsmo[i][j];
 				if (zsmo[i][j] < min_sm_val)
 					min_sm_val = zsmo[i][j];
 			}
-		}
+		}	
+
 		// step 3. get the intensities and variances
-		int nLevels = 600;
+		int nLevels = 256;
 		double delta0 = (max_sm_val-min_sm_val) / (nLevels-1);
 		
 		double[] xMean = new double[nLevels];
@@ -1895,12 +1922,12 @@ public class ImageHandling {
 			diffMean[i] = 0;
 		}
 		int curLevel;
-		for (int i = 1; i < Org_Im.length-1; i++) {
-			for (int j = 1; j < Org_Im[0].length-1; j++) {
-				idx = (i-1) * (Org_Im[0].length-1) + (j-1);
+		for (int i = delta; i < Org_Im.length-delta; i++) {
+			for (int j = delta; j < Org_Im[0].length-delta; j++) {
+				//idx = (i-1) * (Org_Im[0].length-1) + (j-1);
 				curLevel = (int)Math.floor((zsmo[i][j]-min_sm_val)/delta0);
 				xMean[curLevel] += zsmo[i][j];
-				diffMean[curLevel] += diff[idx];
+				diffMean[curLevel] += diff[i][j];
 				eleCnt[curLevel] ++;
 			}
 		}
@@ -1908,11 +1935,11 @@ public class ImageHandling {
 			xMean[i] /= eleCnt[i];
 			diffMean[i] /= eleCnt[i];
 		}
-		for (int i = 1; i < Org_Im.length-1; i++) {
-			for (int j = 1; j < Org_Im[0].length-1; j++) {
-				idx = (i-1) * (Org_Im[0].length-1) + (j-1);
+		for (int i = delta; i < Org_Im.length-delta; i++) {
+			for (int j = delta; j < Org_Im[0].length-delta; j++) {
+				idx = (i-delta) * (Org_Im[0].length-delta) + (j-delta);
 				curLevel = (int)Math.floor((zsmo[i][j]-min_sm_val)/delta0);
-				xVar[curLevel] += Math.pow(diff[idx] - diffMean[curLevel], 2);
+				xVar[curLevel] += Math.pow(diff[i][j] - diffMean[curLevel], 2);
 			}
 		}
 		for (int i=0;i<nLevels;i++) {
@@ -1984,18 +2011,34 @@ public class ImageHandling {
 		}
 		
 		qq.var = var1*255*255;
+		/***way 1***/
+//		qq.varRatio = 0.9;
+//		double cumuEleCnt = 0;
+//		double totalEleCnt = (double) (Org_Im[0].length * Org_Im.length - eleCnt[0]);
+//		int tgLevel = (int)Math.round(nLevels * 0.05);
+//		for (int i=1; i<eleCnt.length;i++) {
+//			if ((cumuEleCnt / totalEleCnt) > qq.varRatio & i >= tgLevel) {
+//				tgLevel = i;
+//				break;
+//			}
+//			cumuEleCnt += (double)eleCnt[i];
+//		}
+//		qq.varRatioBased = ((A[tgLevel][0])*alpha+sigma2)*255*255;
+		/***way 2***/
 		double cumuEleCnt = 0;
 		double totalEleCnt = (double) (Org_Im[0].length * Org_Im.length - eleCnt[0]);
-		int tgLevel = (int)Math.round(nLevels * 0.05);
+		int tgLevel = 0;
 		for (int i=1; i<eleCnt.length;i++) {
-			if ((cumuEleCnt / totalEleCnt) > qq.varRatio & i >= tgLevel) {
+			if ((cumuEleCnt / totalEleCnt) > (qq.varRatio / 2)) {
 				tgLevel = i;
 				break;
 			}
 			cumuEleCnt += (double)eleCnt[i];
 		}
-		// qq.varRatioBased = ((A[(int)Math.round(nLevels * qq.varRatio)][0])*alpha+sigma2)*255*255;
-		qq.varRatioBased = ((A[tgLevel][0])*alpha+sigma2)*255*255;
+		qq.varRatioBased = xVar[tgLevel]*255*255;
+//		if (qq.varRatioBased < 1) {
+//			qq.varRatioBased = 1;
+//		}
 		System.out.println("alpha: "+pEst0[0]+" beta:"+pEst0[1]+" Variance:"+qq.var+"Variance 0.1:"+qq.varRatioBased);
 
 	}

@@ -23,6 +23,7 @@ public class paraP3D {
     public int minIntensity = 50; 
     public int max_ratio = 2;  //2
     public int conn_direc = 26;  // define neighbors 3*3*3 (or maybe 6)
+    public int cpt_nei = 9;  // 9: define neighbors 3*3 for z-score calculation if different z-stacks are not reliable, otherwise 26
 	public double minfill = 0.25;//0.25; //for convex shape of synapse
 	public double maxWHratio = 2; //remove too long or too short regions, spatial-ratio of detected synapse
 	public double [][] mu = InitialMu();//look up table for Mu
