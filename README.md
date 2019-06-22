@@ -19,14 +19,14 @@ Please open an issue. We are happy to help!
 
 ## Unsupervised, but works as good as (or better than) supervised methods
 * SynQuant performs better than peer unsupervised methods [5-8] for all the three data sets we tested (3D *in-vivo* [2], array tomography [3], neuron-astrocyte coculture [4]).
-* SynQuant is comparable with the best performing supervised method [10] in two of the data sets (array tomography [3], neuron-astrocyte coculture [4]).
-* SynQuant is better than [10] in 3D *in-vivo* data [2]. 
+* SynQuant is performs similar with the best performing supervised method [10] in terms of F1 score and works better than it in terms of average precision.
 * SynQuant outperforms other supervised methods [9,11].
-* Training an supervised methods is non-trivial: sufficient training labels, experimenting with all kinds of network architectures or feature extraction algorithms, and somehow boring parameter tuning. 
-* **We suggest trying SynQuant on your data before using the supervised methods**.
+<!-- * Training an supervised methods is non-trivial: sufficient training labels, experimenting with all kinds of network architectures or feature extraction algorithms, and somehow boring parameter tuning.  -->
+<!-- * **We suggest trying SynQuant on your data before using the supervised methods**. -->
 
 ## Statistical significance for each punctum
-* SynQuant is based on order statistics, which assign a p-value or z-score to each puncta. Adjust z-score to trade-off between false positives and false negatives.
+* SynQuant is based on order statistics, which assign a p-value or z-score to each puncta. 
+* Adjust z-score to trade-off between false positives and false negatives.
 
 ## Easy to use
 * User friendly Fiji plug-in
