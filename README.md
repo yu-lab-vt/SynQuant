@@ -13,7 +13,7 @@ Please open an issue. We are happy to help!
 * **2D** and **3D** data
 * **Confocal** imaging, **two-photon** imaging, and **array tomograhy**
 * **Cultured** tissue, **brain slice**, and **in-vivo** data
-* Combine **pre-synaptic and post-synaptic chanenls** to predic the grounth truth synaptic cleft.
+* Combine **pre-synaptic and post-synaptic chanenls** to predict the grounth-truth synaptic cleft.
 * With or without **neurite comtamination** 
 * Puncta may have different **sizes**, **shapes** and **brighness**
 
