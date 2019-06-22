@@ -4,8 +4,9 @@ SynQuant is a Fiji plugin that automatically quantify synapses from fluorescence
 Any problem? SynQuant does not work on your data? 
 Please open an issue. We are happy to help!
 
-# Why SynQuant
 ![Overview of SynQuant](img/example_data.png)
+
+# Why SynQuant
 
 ## *Versatile* and works with *difficult* data
 * **Detect** and **segment** synaptic punctum
