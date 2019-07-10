@@ -110,27 +110,41 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 			impVec[0] = null;
 			numChannels--;
 		}
-		else
+		else {
 			impVec[0] = WindowManager.getImage(activeImageIDs[pre_chl]);
+			if(impVec[0].getNFrames() > 1){
+				IJ.showMessage("Does not support video currently!.\n");
+				return false;
+			}
+		}
 		
 		if (post_chl==activeImageIDs.length) {
 			impVec[1] = null;
 			numChannels--;
 		}
-		else
+		else {
 			impVec[1] = WindowManager.getImage(activeImageIDs[post_chl]);
-		
-		if(numChannels < 1){
-			IJ.showMessage("At least input one channel.\n");
-			return false;
+			if(impVec[1].getNFrames() > 1){
+				IJ.showMessage("Does not support video currently!.\n");
+				return false;
+			}
 		}
 		
+		if(numChannels < 1){
+			IJ.showMessage("At least input one synapse channel.\n");
+			return false;
+		}
+
 		if (den_chl < activeImageIDs.length) {
 			den_imp = WindowManager.getImage(activeImageIDs[den_chl]);
+			if(den_imp.getNFrames() > 1){
+				IJ.showMessage("Does not support video currently!.\n");
+				return false;
+			}
 		}else {
 			den_imp = null;
 		}
-		
+
 		return true;
 	}
 	/***
@@ -148,6 +162,7 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 //		q.synZscore = new double [timePts][zSlice][height][width];
 		slideThrZ = 1000;
 		ppsd3D particle3D_det = null;
+		//short[][] Arr3D = null;
 		for (int chl = 0; chl < impVec.length; chl++) {
 			if (impVec[chl] == null)
 				continue;
@@ -241,16 +256,17 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		// wait to listen for the changing of zscore threshold
 		sliderSynMap = null;
 		gd.addDialogListener(this);
-
 		//dialogItemChanged (gd, null);
 		gd.showDialog();
-		if (imp.getNSlices() == 1) { // use ROI manager to display results
-			ImageHandling IH = new ImageHandling();
+		
+		// display the results of puncta detection results
+		ImageHandling IH = new ImageHandling();
+		if (imp.getNSlices() == 1) { //for 2d data use ROI manager to display results
 			boolean [][] synMap2dBin = new boolean[synZscore[0][0].length][synZscore[0][0][0].length];
 			if (sliderSynMap == null) {
 				for (int i=0; i<synZscore[0][0].length; i++) {
 					for (int j=0; j<synZscore[0][0][0].length;j++) {
-						if(synZscore[0][0][i][j]>zscore_thres) {
+						if(synZscore[0][0][i][j]>=zscore_thres) {
 							synMap2dBin[i][j] = true;
 						}
 						else {
@@ -273,7 +289,84 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 				}
 			}
 			int[][] synMap2d = IH.bwlabel(synMap2dBin, 8);
-			IH.DisplayROI(IH.NextLabel,height,width,synMap2d, outputImp,"Synapse detection results");
+			outputImp.close();
+			ImagePlus ROIImp = imp.duplicate();
+			ROIImp.setTitle("Synapse detection results");
+			ROIImp.show();
+			IH.DisplayROI(IH.NextLabel,height,width,synMap2d, ROIImp,"Synapse detection results");
+		}
+		else {//for 3d data use table to display statistics results
+			boolean [][][] synMap3dBin = new boolean[synZscore[0].length][synZscore[0][0].length][synZscore[0][0][0].length];
+			if (sliderSynMap == null) {
+				for (int k = 0; k<synZscore[0].length; k++) {
+					for (int i=0; i<synZscore[0][0].length; i++) {
+						for (int j=0; j<synZscore[0][0][0].length;j++) {
+							if(synZscore[0][k][i][j]>=zscore_thres) {
+								synMap3dBin[k][i][j] = true;
+							}
+							else {
+								synMap3dBin[k][i][j] = false;
+							}
+						}
+					}
+				}
+			}
+			else {
+				for (int k = 0; k<sliderSynMap.length; k++) {
+					for (int i=0; i<sliderSynMap[0].length; i++) {
+						for (int j=0; j<sliderSynMap[0][0].length;j++) {
+							if(sliderSynMap[k][i][j]>0) {
+								synMap3dBin[k][i][j] = true;
+							}
+							else {
+								synMap3dBin[k][i][j] = false;
+							}
+						}
+					}
+				}
+			}
+			int[][][] synMap3d = IH.bwlabel3D(synMap3dBin,26);
+			double [][] puncta_feats = new double [IH.NextLabel][4]; // volume, Mean, Max, Min intensity
+			for (int i=0; i < IH.NextLabel; i++) {
+				puncta_feats[i][0] = 0;
+				puncta_feats[i][1] = 0;
+				puncta_feats[i][2] = 0;
+				puncta_feats[i][3] = 65536;
+			}
+			double[][] ArrDouble3D = stack2DoubleArray(imp.getType(), imp.getStack(), 1);
+			System.out.println(bm.matrix2DMax(ArrDouble3D));
+			for (int k = 0; k<synMap3d.length; k++) {
+				for (int i=0; i<synMap3d[0].length; i++) {
+					for (int j=0; j<synMap3d[0][0].length;j++) {
+						int punctum_id = synMap3d[k][i][j]-1;
+						if (punctum_id >= 0) {
+							if (punctum_id >= puncta_feats.length)
+								System.out.print(true);
+							puncta_feats[punctum_id][0] += 1;
+							
+							double cur_intensity = ArrDouble3D[k][i*synMap3d[0][0].length + j];
+							puncta_feats[punctum_id][1] += cur_intensity;
+							
+							if (cur_intensity > puncta_feats[punctum_id][2])
+								puncta_feats[punctum_id][2] = cur_intensity;
+							
+							if (cur_intensity < puncta_feats[punctum_id][3])
+								puncta_feats[punctum_id][3] = cur_intensity;
+						}
+					}
+				}
+			}
+			ResultsTable det_ft_table = new ResultsTable();
+			for (int i=0;i<IH.NextLabel;i++) {
+				det_ft_table.incrementCounter();
+				det_ft_table.addValue("Index", i+1);
+				det_ft_table.addValue("Volume", (int)puncta_feats[i][0]);
+				det_ft_table.addValue("Mean", (double)Math.round(10.0*puncta_feats[i][1]/puncta_feats[i][0])/10.0);
+				det_ft_table.addValue("Min", puncta_feats[i][3]);
+				det_ft_table.addValue("Max", puncta_feats[i][2]);
+			}
+			det_ft_table.showRowNumbers(false);
+			det_ft_table.show("Puncta statistics on 3D data");
 		}
 		if(den_imp != null) {
 			if (den_imp.getNSlices() == 1 & imp.getNSlices() == 1) { //do quantification
@@ -364,7 +457,7 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 			}
 			//int [][][] tmpSynIdx = imh.bwlabel3D(tmpSynZ, 26);
 			SynapticDisplay(sliderSynMap, i);
-			outputImp.updateAndRepaintWindow();;
+			outputImp.updateAndRepaintWindow();
 		}
 		return true;
 	}
@@ -452,6 +545,7 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
         	System.out.println(e);
         }
 	}
+	
 	public void SynapticDisplay(int [][][] kSynR1, int curTimePt){
 		//ImagePlus outimp = NewImage.createImage(null, width, height, 1,16, NewImage.FILL_BLACK);
 		//ImageProcessor outIP =  outimp.getProcessor();
@@ -589,7 +683,44 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		}
 		return imArray;
 	}
-	
+	public double[][] stack2DoubleArray(int type, ImageStack stack, int frameNum){
+		int mask=0xff;
+		int nPixels=width*height;
+		double[][] imArray = new double[zSlice][nPixels];
+		if (type == ImagePlus.GRAY16)
+		{
+			mask=0xffff;
+			for(int zz=1;zz<=zSlice;zz++) {
+				int curSliceNum = imp.getStackIndex(1, zz, frameNum);// default all data are one-channel data
+				short[] pixels = (short[])stack.getPixels(curSliceNum);
+				int intP = (int)(mask&pixels[0]);
+				for (int i=0; i<nPixels; i++)
+				{
+					intP=(int)(mask&pixels[i]);
+					imArray[zz-1][i]=intP;
+				}
+			}
+		}  
+		else if (type == ImagePlus.GRAY8) 
+		{
+			mask=0xff;
+			for(int zz=1;zz<=zSlice;zz++) {
+				int curSliceNum = imp.getStackIndex(1, zz, frameNum); // default all data are one-channel data
+				byte[] pixels = (byte[])stack.getPixels(curSliceNum);
+				for (int i=0; i<nPixels; i++)
+				{
+					short p=(short)(mask&pixels[i]);
+					imArray[zz-1][i]=p;
+				}
+			}
+		}
+		else
+		{
+			IJ.log("Pixel format not supported");
+			return null;
+		}
+		return imArray;
+	}
 	/**
 	 * Main method for debugging.
 	 *

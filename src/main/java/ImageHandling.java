@@ -1448,7 +1448,7 @@ public class ImageHandling {
 		String imtitle = "";
 		ImagePlus newimp = NewImage.createByteImage (imtitle, width, height, 1,/*stack=1*/ 
 				NewImage.FILL_WHITE);
-		ImageProcessor impNP = newimp.getProcessor(); 
+		ImageProcessor impNP = newimp.getProcessor();
 		for(int i = 0; i<height;i++){
 			for(int j = 0; j<width;j++){
 				impNP.putPixel(j,i,SynR1Idx[i][j]);
@@ -1460,7 +1460,7 @@ public class ImageHandling {
 		RoiManager manager = new RoiManager();
 		int[] roi2fiu = new int[nSyn0];
 		int roi_cnt = 0;
-		double wandVal = 0.01;
+		double wandVal = 0.0001;
 		for(int i=0;i<nSyn0;i++){
 			roi2fiu[roi_cnt] = i;
 			roi_cnt++;
@@ -1474,8 +1474,9 @@ public class ImageHandling {
 			}
 		}
 		manager.setTitle(frametitle);
-		manager.runCommand("show all with labels");
+		manager.runCommand("show all");
 		manager.setSize(300, 400);
+		
 	}
 
 	/***********

@@ -345,9 +345,6 @@ public class ComponentTree3D4Fast{
 									voxSumN[j] += imArray[tmpIdx];
 									areasN[j]++;
 									usedN[tmpIdx] = USED_AS_N_ONCE;
-									if(j==6640) {
-										System.out.print("neighbor val: "+imArray[tmpIdx]+" "+ii +" "+jj+" "+kk+" "+areasN[j]+"\n");
-									}
 								}
 						}
 					}
@@ -395,14 +392,14 @@ public class ComponentTree3D4Fast{
 			}else if(areas[i]<p.min_size || ratio>p.maxWHratio || (areas[i]/(double)(LH*LW*LZ))<p.minfill) {
 				zscore[i] = -1;
 			}else {
-				rmder = i % nPixels;
-				z = i / nPixels;
-				y=rmder/width;
-				x=rmder-y*width;
-				if (i==6640) {//(x<=26 & x>=25) & (y<=29 & y>=27) & z==0) {
-					int e = i; 
-					System.out.println("summary: "+z+" "+y+" "+x+" "+"score: "+zscore[e]+" Other "+areas[e]+" "+voxSum[e]+" "+areasN[e]+" "+voxSumN[e]+" ");
-				}
+//				rmder = i % nPixels;
+//				z = i / nPixels;
+//				y=rmder/width;
+//				x=rmder-y*width;
+//				if (i==6640) {//(x<=26 & x>=25) & (y<=29 & y>=27) & z==0) {
+//					int e = i; 
+//					System.out.println("summary: "+z+" "+y+" "+x+" "+"score: "+zscore[e]+" Other "+areas[e]+" "+voxSum[e]+" "+areasN[e]+" "+voxSumN[e]+" ");
+//				}
 				zscore[i] = zscoreCal(diffN[i],areas[i],areasN[i],p,q.var);
 				Zscore_Vec.add(zscore[i]);
 				zScoreIdx.add(i);
@@ -638,9 +635,9 @@ public class ComponentTree3D4Fast{
 		//e1-adjacent; e2-current
 		int res;
 		int m;
-		if(e1==6640 | e2==6640) {
-			System.out.print("e1:"+imArray[e1]+" e2:"+imArray[e1] +" "+imArray[e2]+"\n");
-		}
+//		if(e1==6640 | e2==6640) {
+//			System.out.print("e1:"+imArray[e1]+" e2:"+imArray[e1] +" "+imArray[e2]+"\n");
+//		}
 		if(imArray[e1]==imArray[e2])
 		{
 			res=Math.max(e1,e2);
@@ -840,20 +837,32 @@ public class ComponentTree3D4Fast{
 //		while(N>=pMu[0].length) {
 //			
 //		}
-//		
-		if (M>=pMu.length || N>=pMu[0].length) {
-			mu = p.CalMu(M,N,1000);
-			sigma = p.CalSigma(M,N,1000);
-		}else {
-			mu = pMu[M-1][N-1];
-			sigma = pSigma[M-1][N-1];
-		}
-
-		mu = mu*Math.sqrt(qVar);
-		sigma = sigma*Math.sqrt(qVar);
-		//double zScore = (t0-mu)/sigma;
-		//t0 = t0/Math.sqrt(qVar);
-		return (t0-mu)/sigma;
+		double sigmaScl = 1;
+        
+        if (M>=pMu.length || N>=pMu[0].length) {
+            sigmaScl = Math.sqrt((double)(M+N)/500);
+            M = (int) Math.floor(((double)M)/(M+N)*500);
+            N = (int) Math.floor(((double)N)/(M+N)*500);
+        }       
+        mu = pMu[M-1][N-1];
+        sigma = pSigma[M-1][N-1];
+        mu = mu*Math.sqrt(qVar);
+        sigma = sigma*Math.sqrt(qVar)/sigmaScl;
+        double zScore = (t0-mu)/sigma;
+        return zScore;
+//		if (M>=pMu.length || N>=pMu[0].length) {
+//			mu = p.CalMu(M,N,1000);
+//			sigma = p.CalSigma(M,N,1000);
+//		}else {
+//			mu = pMu[M-1][N-1];
+//			sigma = pSigma[M-1][N-1];
+//		}
+//
+//		mu = mu*Math.sqrt(qVar);
+//		sigma = sigma*Math.sqrt(qVar);
+//		//double zScore = (t0-mu)/sigma;
+//		//t0 = t0/Math.sqrt(qVar);
+//		return (t0-mu)/sigma;
 	}
 	
 	
