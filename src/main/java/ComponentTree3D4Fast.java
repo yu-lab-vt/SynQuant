@@ -837,6 +837,7 @@ public class ComponentTree3D4Fast{
 //		while(N>=pMu[0].length) {
 //			
 //		}
+<<<<<<< HEAD
 		double sigmaScl = 1;
         
         if (M>=pMu.length || N>=pMu[0].length) {
@@ -850,6 +851,22 @@ public class ComponentTree3D4Fast{
         sigma = sigma*Math.sqrt(qVar)/sigmaScl;
         double zScore = (t0-mu)/sigma;
         return zScore;
+=======
+//		
+		double sigmaScl = 1;
+        
+		if (M>=pMu.length || N>=pMu[0].length) {
+		    sigmaScl = Math.sqrt((double)(M+N)/500);
+		    M = (int) Math.floor(((double)M)/(M+N)*500);
+		    N = (int) Math.floor(((double)N)/(M+N)*500);
+		}       
+		mu = pMu[M-1][N-1];
+		sigma = pSigma[M-1][N-1];
+		mu = mu*Math.sqrt(qVar);
+		sigma = sigma*Math.sqrt(qVar)/sigmaScl;
+		double zScore = (t0-mu)/sigma;
+		return zScore;
+>>>>>>> fc576d9c4dbb71913d407cf9cb6da2a6245f220e
 //		if (M>=pMu.length || N>=pMu[0].length) {
 //			mu = p.CalMu(M,N,1000);
 //			sigma = p.CalSigma(M,N,1000);
