@@ -91,7 +91,7 @@ public class ppsd3D {
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < width; j++) {
 					Gt[zz][i][j] = tmpGt[i][j+shiftPixels];// the data is saved by line, what if we use orginal data?
-					imArray[zz][i * width + j] = (short) Math.round(Gt[zz][i][j]);
+					imArray[zz][i * width + j] = (short) Gt[zz][i][j];
 				}
 			}
 		}
