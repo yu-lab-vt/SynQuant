@@ -42,7 +42,7 @@ Please open an issue. We are happy to help!
 For more details, download our user guide [here](https://drive.google.com/file/d/1YND2SoC8yUhU6LBVBY-8TO1Wul8f0TnO/view?usp=sharing). -->
 
 # Getting started
-1. [Downlaod SynQuant](https://github.com/yu-lab-vt/SynQuant/releases). 
+1. [Downlaod SynQuant](https://github.com/Weizheng96/SynQuant/releases). 
     * If you do not have Fiji yet, get it [here](https://fiji.sc/).
 2. Put the downloaded jar file to the `plugin` folder of Fiji.
 3. Open Fiji and load the image. 
@@ -75,6 +75,9 @@ For more information, check out our [updated paper draft](https://drive.google.c
 
 
 # Updates
+Version 1.3
+* Divide synaptic clusters into single synapses.
+
 Version 1.2
 * Allow for the detection of pre-, post-synaptic puncta and synaptic sites.
 * Add the function of combining pre-, post-synaptic puncta detection results.
@@ -86,6 +89,7 @@ Version 1.2
 Version 1.1
 * Add the component tree structure for synapse detection suggested by Dr.Petter Ranefall. 3 times faster than before
 * Output ROI regions overlaid with original synaptic data. Quantification can be done based on detected synapses or synaptic sites.
+
 
 # Reference
 ## Citation
