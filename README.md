@@ -69,7 +69,7 @@ The parameter used in this framework is only the threshold of p-value or z-score
 
 The framework of synapse detection algorithm now is based on the idea of component tree which scales well to 3D data. 
 
-For more information, check out our [updated paper draft](https://drive.google.com/open?id=14uR3T7SpJKezWjSAQNhWAzvLc2KgpiIz). For citation, see reference [1].
+For more information, check out our [paper](https://academic.oup.com/bioinformatics/article/36/5/1599/5584198). For citation, see reference [1].
 
 ![Tree based detection and segmentation algorithm](img/tree.png)
 
@@ -89,9 +89,7 @@ Version 1.1
 
 # Reference
 ## Citation
-[1] Yizhi Wang, Congchao Wang, Petter Ranefall, Gerard Joey Broussard, Yinxue Wang, Guilai Shi, Yue Wang, Lin Tian, Guoqiang Yu, *SynQuant: An Automatic Tool to Quantify Synapses from Microscopy Images*, BioRxiv 538769; doi: https://doi.org/10.1101/538769
-
-Please find the updated draft [here](https://drive.google.com/open?id=14uR3T7SpJKezWjSAQNhWAzvLc2KgpiIz).
+[1] Yizhi Wang, Congchao Wang, Petter Ranefall, Gerard Joey Broussard, Yinxue Wang, Guilai Shi, Boyu Lyu, Chiung-Ting Wu, Yue Wang, Lin Tian, Guoqiang Yu. (2020). SynQuant: An Automatic Tool to Quantify Synapses from Microscopy Images, Bioinformatics, 36(5), 1599–1606
 
 ## Dataset related papers
 [2] Bass, C., Helkkula, P., De Paola, V., Clopath, C., & Bharath, A. A. (2017). Detection of axonal synapses in 3d two-photon images. PloS one, 12(9).
