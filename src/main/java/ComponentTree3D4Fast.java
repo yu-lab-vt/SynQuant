@@ -842,7 +842,7 @@ public class ComponentTree3D4Fast{
 		if (M>=pMu.length || N>=pMu[0].length) { //approximation of super large particle
 		    sigmaScl = Math.sqrt((double)(M+N)/500);
 		    M = (int) Math.floor(((double)M)/(M+N)*500);
-		    N = 500 - M;//Math.floor(((double)N)/(M+N)*500);
+		    N = 500 - M;//If we use previous function, the approximation is larger than expected
 		}       
 		mu = pMu[M-1][N-1];
 		sigma = pSigma[M-1][N-1];
