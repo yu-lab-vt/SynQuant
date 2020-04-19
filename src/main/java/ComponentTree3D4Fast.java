@@ -837,28 +837,12 @@ public class ComponentTree3D4Fast{
 //		while(N>=pMu[0].length) {
 //			
 //		}
-<<<<<<< HEAD
+/**way 1: truncated gaussian for approximation**/
 		double sigmaScl = 1;
-        
-        if (M>=pMu.length || N>=pMu[0].length) {
-            sigmaScl = Math.sqrt((double)(M+N)/500);
-            M = (int) Math.floor(((double)M)/(M+N)*500);
-            N = (int) Math.floor(((double)N)/(M+N)*500);
-        }       
-        mu = pMu[M-1][N-1];
-        sigma = pSigma[M-1][N-1];
-        mu = mu*Math.sqrt(qVar);
-        sigma = sigma*Math.sqrt(qVar)/sigmaScl;
-        double zScore = (t0-mu)/sigma;
-        return zScore;
-=======
-//		
-		double sigmaScl = 1;
-        
-		if (M>=pMu.length || N>=pMu[0].length) {
+		if (M>=pMu.length || N>=pMu[0].length) { //approximation of super large particle
 		    sigmaScl = Math.sqrt((double)(M+N)/500);
 		    M = (int) Math.floor(((double)M)/(M+N)*500);
-		    N = (int) Math.floor(((double)N)/(M+N)*500);
+		    N = 500 - M;//Math.floor(((double)N)/(M+N)*500);
 		}       
 		mu = pMu[M-1][N-1];
 		sigma = pSigma[M-1][N-1];
@@ -866,7 +850,7 @@ public class ComponentTree3D4Fast{
 		sigma = sigma*Math.sqrt(qVar)/sigmaScl;
 		double zScore = (t0-mu)/sigma;
 		return zScore;
->>>>>>> fc576d9c4dbb71913d407cf9cb6da2a6245f220e
+/**way 2: use integral to re-estimate parameters based on order-statistics**/
 //		if (M>=pMu.length || N>=pMu[0].length) {
 //			mu = p.CalMu(M,N,1000);
 //			sigma = p.CalSigma(M,N,1000);
@@ -877,8 +861,6 @@ public class ComponentTree3D4Fast{
 //
 //		mu = mu*Math.sqrt(qVar);
 //		sigma = sigma*Math.sqrt(qVar);
-//		//double zScore = (t0-mu)/sigma;
-//		//t0 = t0/Math.sqrt(qVar);
 //		return (t0-mu)/sigma;
 	}
 	
