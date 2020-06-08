@@ -12,6 +12,7 @@ public class paraQ3D{
     public int ntry;
     public double[][][][] synZscore = null; // if we have some prior infor for z-score, this is generally from pre-channel
     public int _NumChannel;
+    public int _wayCombinePrePost;
     public int NumChannelProcessed = 0; // if we have multi-channel, when NumChannelProcessed==_NumChannel, we can do dfr control
     public int curTps = 0; // indicate which time point we are processing if each channel is a video. start from 0 to t-1
     public double varRatio = 0.05; // use the 0.1 location in y=a*x+b to estimate the noise
@@ -32,7 +33,8 @@ public class paraQ3D{
     	Pix_per_synapse = (int)Math.round(1/Lx2);
     	ntry = inntry;
     }
-    public paraQ3D(int NumChannel, double varRatioIn){
+    public paraQ3D(int NumChannel, int wayCombinePrePost, double varRatioIn){
+    	_wayCombinePrePost = wayCombinePrePost;
     	_NumChannel = NumChannel;
     	varRatio = varRatioIn;
     };

@@ -45,10 +45,11 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 	protected double minFill, maxWHRatio;
 	protected int NumSynSite=0; 
 	protected ImagePlus outputImp=null; // detection results output
-	int[][][][] synIdx;
-	double[][][][] synZscore;
+	int [][][][] synIdx;
+	double [][][][] synZscore;
 	double slideThrZ;
 	int [][][] sliderSynMap; 	// synapse map after post-processing
+	int way2combinePostPre = 1; // the way to combine pre- and post-channel, 0:intersect, 1: add pre-zscore to post-zscore
 	
 	
 	boolean fastflag = true; //true: no use because we only use fast version
@@ -85,6 +86,8 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		openData[activeImageIDs.length] = "Null";
 		gd.addChoice("Post-synapse:", openData, openData[0]);
 		gd.addChoice("Pre-synapse:", openData, openData[activeImageIDs.length]);
+		String[] combinePrePostChl = {"intersect", "post_channel_mainly","Null"};
+		gd.addChoice("Way to combine:", combinePrePostChl, combinePrePostChl[combinePrePostChl.length-1]);
 		gd.addChoice("Dendrite channel", openData, openData[activeImageIDs.length]);
 		gd.showDialog();
 		if (gd.wasCanceled()){
@@ -102,6 +105,9 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		}
 		int post_chl = gd.getNextChoiceIndex();
 		int pre_chl = gd.getNextChoiceIndex();
+		way2combinePostPre = gd.getNextChoiceIndex();
+		if (way2combinePostPre>1) //user forget to set or single channel
+			way2combinePostPre = 1;
 		int den_chl = gd.getNextChoiceIndex();
 		
 		numChannels = 2; // we only care two channels: post- and pre-synaptic channel
@@ -153,13 +159,9 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 	 * ***/
 	public void synQuant3D_real() {
 		//// parameter initialization
-		paraQ3D q = new paraQ3D(numChannels, 0.8);
+		paraQ3D q = new paraQ3D(numChannels, way2combinePostPre, 0.8);
 		BasicMath bm = new BasicMath();
 		//// data saving final results
-//		timePts = imp.getNFrames();
-//		synIdx = new int [timePts][zSlice][height][width];
-//		synZscore = new double [timePts][zSlice][height][width];
-//		q.synZscore = new double [timePts][zSlice][height][width];
 		slideThrZ = 1000;
 		ppsd3D particle3D_det = null;
 		//short[][] Arr3D = null;
@@ -178,9 +180,7 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 				synIdx = new int [timePts][zSlice][height][width];
 				synZscore = new double [timePts][zSlice][height][width];
 			}
-			//if (q._NumChannel == q.NumChannelProcessed + 1 ) {
-				
-			//}
+
 			double vox_x = imp.getCalibration().pixelWidth; 
 			if(vox_x==1)//simulated data
 				vox_x = 2.0757e-7;
@@ -191,33 +191,28 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 
 			long startTime1=System.nanoTime();
 			////particle detection
-			for (int i=1; i <= timePts; i++){
+			for (int i=1; i <= timePts; i++)
+			{
 				q.curTps = i-1;
 				short[][] Arr3D = stack2array(type, stack, i); // #zstack*#pixels in one slice
 				paraP3D p = new paraP3D(fdr, zscore_thres,(int)bm.matrix2DMin(Arr3D),(int)bm.matrix2DMax(Arr3D),MinSize, MaxSize, minFill, maxWHRatio);
 				particle3D_det = new ppsd3D(Arr3D, width, height, vox_x, p,q);
-//				synIdx[i-1] = particle3D_det.ppsd_main.kMap;
-//				synZscore[i-1] = particle3D_det.ppsd_main.zMap;
-				// for the final channel, we save the output results
-				if (q._NumChannel == q.NumChannelProcessed + 1 ) { // last one
+
+				// for the post channel, we save the output results
+				if (q._NumChannel == q.NumChannelProcessed + 1 ) 
+				{ // last one
 					synIdx[i-1] = particle3D_det.ppsd_main.kMap;
 					synZscore[i-1] = particle3D_det.ppsd_main.zMap;
 					double tmpThrZ = particle3D_det.ppsd_main.thrZ;
 					if (slideThrZ > tmpThrZ)
 						slideThrZ = tmpThrZ;
-				}else {// not last one
+				}else 
+				{// pre-channel
 					q.synZscore[q.curTps] = particle3D_det.ppsd_main.zMap;
-//					if (q.NumChannelProcessed == 0) { // first one
-//						q.synZscore[q.curTps] = particle3D_det.ppsd_main.zMap;
-//					}else { //not first, not last
-//						q.synZscore[q.curTps] = bm.matrix3DAdd(q.synZscore[q.curTps], particle3D_det.ppsd_main.zMap);
-//					}
 				}
 			}
 			long endTime1=System.nanoTime();
 			System.out.println("Finished. Data size: "+zSlice+" * "+height+" * "+width+" * "+timePts+" Total running time: "+(endTime1-startTime1)/1e9);
-			//// results display 
-			
 			q.NumChannelProcessed ++;
 			q.var = 0; // reset variance, preparing for new channel
 		}
@@ -261,28 +256,39 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		
 		// display the results of puncta detection results
 		ImageHandling IH = new ImageHandling();
-		if (imp.getNSlices() == 1) { //for 2d data use ROI manager to display results
+		if (imp.getNSlices() == 1) 
+		{ //for 2d data use ROI manager to display results
 			boolean [][] synMap2dBin = new boolean[synZscore[0][0].length][synZscore[0][0][0].length];
-			if (sliderSynMap == null) {
-				for (int i=0; i<synZscore[0][0].length; i++) {
-					for (int j=0; j<synZscore[0][0][0].length;j++) {
-						if(synZscore[0][0][i][j]>=zscore_thres) {
+			if (sliderSynMap == null) 
+			{
+				for (int i=0; i<synZscore[0][0].length; i++) 
+				{
+					for (int j=0; j<synZscore[0][0][0].length;j++) 
+					{
+						if(synZscore[0][0][i][j]>=zscore_thres) 
+						{
 							synMap2dBin[i][j] = true;
 						}
-						else {
+						else 
+						{
 							synMap2dBin[i][j] = false;
 						}
 					}
 				}
 			}
-			else {
+			else 
+			{
 				//boolean [][] synMap2dBin = new boolean[sliderSynMap[0].length][sliderSynMap[0][0].length];
-				for (int i=0; i<sliderSynMap[0].length; i++) {
-					for (int j=0; j<sliderSynMap[0][0].length;j++) {
-						if(sliderSynMap[0][i][j]>0) {
+				for (int i=0; i<sliderSynMap[0].length; i++) 
+				{
+					for (int j=0; j<sliderSynMap[0][0].length;j++) 
+					{
+						if(sliderSynMap[0][i][j]>0) 
+						{
 							synMap2dBin[i][j] = true;
 						}
-						else {
+						else 
+						{
 							synMap2dBin[i][j] = false;
 						}
 					}
@@ -295,30 +301,43 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 			ROIImp.show();
 			IH.DisplayROI(IH.NextLabel,height,width,synMap2d, ROIImp,"Synapse detection results");
 		}
-		else {//for 3d data use table to display statistics results
+		else 
+		{//for 3d data use table to display statistics results
 			boolean [][][] synMap3dBin = new boolean[synZscore[0].length][synZscore[0][0].length][synZscore[0][0][0].length];
-			if (sliderSynMap == null) {
-				for (int k = 0; k<synZscore[0].length; k++) {
-					for (int i=0; i<synZscore[0][0].length; i++) {
-						for (int j=0; j<synZscore[0][0][0].length;j++) {
-							if(synZscore[0][k][i][j]>=zscore_thres) {
+			if (sliderSynMap == null) 
+			{
+				for (int k = 0; k<synZscore[0].length; k++) 
+				{
+					for (int i=0; i<synZscore[0][0].length; i++) 
+					{
+						for (int j=0; j<synZscore[0][0][0].length;j++) 
+						{
+							if(synZscore[0][k][i][j]>=zscore_thres) 
+							{
 								synMap3dBin[k][i][j] = true;
 							}
-							else {
+							else 
+							{
 								synMap3dBin[k][i][j] = false;
 							}
 						}
 					}
 				}
 			}
-			else {
-				for (int k = 0; k<sliderSynMap.length; k++) {
-					for (int i=0; i<sliderSynMap[0].length; i++) {
-						for (int j=0; j<sliderSynMap[0][0].length;j++) {
-							if(sliderSynMap[k][i][j]>0) {
+			else 
+			{
+				for (int k = 0; k<sliderSynMap.length; k++) 
+				{
+					for (int i=0; i<sliderSynMap[0].length; i++) 
+					{
+						for (int j=0; j<sliderSynMap[0][0].length;j++) 
+						{
+							if(sliderSynMap[k][i][j]>0) 
+							{
 								synMap3dBin[k][i][j] = true;
 							}
-							else {
+							else 
+							{
 								synMap3dBin[k][i][j] = false;
 							}
 						}
@@ -327,7 +346,8 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 			}
 			int[][][] synMap3d = IH.bwlabel3D(synMap3dBin,26);
 			double [][] puncta_feats = new double [IH.NextLabel][4]; // volume, Mean, Max, Min intensity
-			for (int i=0; i < IH.NextLabel; i++) {
+			for (int i=0; i < IH.NextLabel; i++) 
+			{
 				puncta_feats[i][0] = 0;
 				puncta_feats[i][1] = 0;
 				puncta_feats[i][2] = 0;
@@ -335,11 +355,15 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 			}
 			double[][] ArrDouble3D = stack2DoubleArray(imp.getType(), imp.getStack(), 1);
 			System.out.println(bm.matrix2DMax(ArrDouble3D));
-			for (int k = 0; k<synMap3d.length; k++) {
-				for (int i=0; i<synMap3d[0].length; i++) {
-					for (int j=0; j<synMap3d[0][0].length;j++) {
+			for (int k = 0; k<synMap3d.length; k++) 
+			{
+				for (int i=0; i<synMap3d[0].length; i++) 
+				{
+					for (int j=0; j<synMap3d[0][0].length;j++) 
+					{
 						int punctum_id = synMap3d[k][i][j]-1;
-						if (punctum_id >= 0) {
+						if (punctum_id >= 0) 
+						{
 							if (punctum_id >= puncta_feats.length)
 								System.out.print(true);
 							puncta_feats[punctum_id][0] += 1;
@@ -368,21 +392,27 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 			det_ft_table.showRowNumbers(false);
 			det_ft_table.show("Puncta statistics on 3D data");
 		}
-		if(den_imp != null) {
-			if (den_imp.getNSlices() == 1 & imp.getNSlices() == 1) { //do quantification
+		if(den_imp != null) 
+		{
+			if (den_imp.getNSlices() == 1 & imp.getNSlices() == 1) 
+			{ //do quantification
 				boolean [][] kSynR1 = new boolean [synZscore[0][0].length][synZscore[0][0][0].length];
-				if (sliderSynMap == null) {
+				if (sliderSynMap == null) 
+				{
 					for (int i=0; i<kSynR1.length; i++)
 					{
-						for(int j=0; j<kSynR1[0].length;j++) {
+						for(int j=0; j<kSynR1[0].length;j++) 
+						{
 							kSynR1[i][j] = synZscore[0][0][i][j]>zscore_thres;
 						}
 					}
 				}
-				else {
+				else 
+				{
 					for (int i=0; i<kSynR1.length; i++)
 					{
-						for(int j=0; j<kSynR1[0].length;j++) {
+						for(int j=0; j<kSynR1[0].length;j++) 
+						{
 							kSynR1[i][j] = sliderSynMap[0][i][j] > 0;
 						}
 					}
@@ -391,7 +421,8 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 				//show features
 				ResultsTable Ft_table = new ResultsTable();
 				int DenCnt = 0;
-				for (int i=0;i<den_det.CurNum;i++) {
+				for (int i=0;i<den_det.CurNum;i++) 
+				{
 					Ft_table.incrementCounter();
 					DenCnt = DenCnt+1;
 					Ft_table.addLabel("Dendrite piece #"+DenCnt);
@@ -444,12 +475,17 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		//System.out.println("-th Frame SynNum: " + zscore_thres);
 		//outputImp = IJ.createHyperStack("Found Particles", width, height, 1, zSlice, timePts,16/*bitdepth*/);
 		outputImp.show();
-		for (int i=1; i <= timePts; i++){
+		for (int i=1; i <= timePts; i++)
+		{
 			sliderSynMap = new int [zSlice][height][width];
-			for (int zz=0;zz<zSlice; zz++) {
-				for(int yy=0;yy<height; yy++) {
-					for(int xx=0;xx<width; xx++) {
-						if(synZscore[i-1][zz][yy][xx] >= zscore_thres) {
+			for (int zz=0;zz<zSlice; zz++) 
+			{
+				for(int yy=0;yy<height; yy++) 
+				{
+					for(int xx=0;xx<width; xx++) 
+					{
+						if(synZscore[i-1][zz][yy][xx] >= zscore_thres) 
+						{
 							sliderSynMap[zz][yy][xx] = 1;//synZscore[i-1][zz][yy][xx];
 						}
 					}
@@ -585,21 +621,28 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 //			}
 //		}
 		double max_intensity = 0;
-		if(imp.getType() == ImagePlus.GRAY16) {
-			for(int stackNum=1; stackNum<=curStack.getSize(); stackNum++) {
+		if(imp.getType() == ImagePlus.GRAY16) 
+		{
+			for(int stackNum=1; stackNum<=curStack.getSize(); stackNum++) 
+			{
 				double tmp_max = curInStack.getProcessor(stackNum).getStatistics().max;
-				if (max_intensity < tmp_max) {
+				if (max_intensity < tmp_max) 
+				{
 					max_intensity = tmp_max;
 				}
 			}
 		}
-		for(int stackNum=1; stackNum<=curStack.getSize(); stackNum++) {
+		for(int stackNum=1; stackNum<=curStack.getSize(); stackNum++) 
+		{
 			outIP = curStack.getProcessor(stackNum);
 			inIP = curInStack.getProcessor(stackNum);
-			for (int i = 0; i < width; i++) {
-				for(int j = 0;j<height;j++){
+			for (int i = 0; i < width; i++) 
+			{
+				for(int j = 0;j<height;j++)
+				{
 					// put channel values in an integer
-					if(imp.getType() == ImagePlus.GRAY8) {
+					if(imp.getType() == ImagePlus.GRAY8) 
+					{
 						int tmp_val = (int)inIP.get(i, j) & 0xff;
 						if(kSynR1[stackNum-1][j][i]>0)
 							outIP.set(i, j, (((int)200 & 0xff) << 16)
@@ -609,7 +652,8 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 							outIP.set(i, j, (((int)0 & 0xff) << 16) 
 									+ (tmp_val << 8)
 									+  ((int)0 & 0xff));
-					}else {
+					}else 
+					{
 //						if(inIP.get(i, j)>255*10)
 //							System.out.println(" "+inIP.get(i, j));
 						byte tmp_float_val = (byte) ((((double)inIP.get(i, j))/max_intensity)*255);

@@ -56,35 +56,82 @@ public class fastppsdcore3D{
 		}
 		kMap = IM.bwlabel3D(zMap, 26);
 		nSyn0 = IM.NextLabel;
-		// Step 3.2. cumulate the zscore from previous channels
-		if (q.NumChannelProcessed >0){
-			double[] pre_z = new double[nSyn0];
-			for(int i=0; i< pre_z.length; i++)
-				pre_z[i] = 0;
-			for(int i=0; i<kMap.length; i++) {
-				for(int j=0; j<kMap[0].length; j++) {
-					for (int k=0; k<kMap[0][0].length; k++) {
-						if (kMap[i][j][k]>0 ) {
-							if(pre_z[kMap[i][j][k]-1] < q.synZscore[q.curTps][i][j][k]) {
-								pre_z[kMap[i][j][k]-1] = q.synZscore[q.curTps][i][j][k];
+		// Step 3.2. cumulate the zscore from previous channels: add z-score of pre-synapse to post-synapse if there is overlap
+		if (q.NumChannelProcessed > 0){
+			if( q._wayCombinePrePost==1) 
+			{
+				double[] pre_z = new double[nSyn0];
+				for(int i=0; i< pre_z.length; i++)
+					pre_z[i] = 0;
+				for(int i=0; i<kMap.length; i++) {
+					for(int j=0; j<kMap[0].length; j++) {
+						for (int k=0; k<kMap[0][0].length; k++) {
+							if (kMap[i][j][k]>0 ) {
+								if(pre_z[kMap[i][j][k]-1] < q.synZscore[q.curTps][i][j][k]) {
+									pre_z[kMap[i][j][k]-1] = q.synZscore[q.curTps][i][j][k];
+								}
 							}
 						}
 					}
 				}
-			}
-			for (int j = nVoxels-1; j >= 0; j--)
+				for (int j = nVoxels-1; j >= 0; j--)
+				{
+					if ( CT.outputArray[j] > 0) {
+						rmder = j % nPixels;
+						z = j / nPixels;
+						y=rmder/width;
+						x=rmder-y*width;
+						zMap[z][y][x] = CT.zscore[j] + pre_z[kMap[z][y][x]-1];
+						if (thrZ > zMap[z][y][x])
+							thrZ = zMap[z][y][x];
+					}
+				}
+			}else
 			{
-				if ( CT.outputArray[j] > 0) {
-					rmder = j % nPixels;
-					z = j / nPixels;
-					y=rmder/width;
-					x=rmder-y*width;
-					zMap[z][y][x] = CT.zscore[j] + pre_z[kMap[z][y][x]-1];
-					if (thrZ > zMap[z][y][x])
-						thrZ = zMap[z][y][x];
+				double[] pre_z = new double[nSyn0];
+				for(int i=0; i< pre_z.length; i++)
+					pre_z[i] = 0;
+				for(int i=0; i<kMap.length; i++) {
+					for(int j=0; j<kMap[0].length; j++) {
+						for (int k=0; k<kMap[0][0].length; k++) {
+							if (kMap[i][j][k]>0) {
+								if(q.synZscore[q.curTps][i][j][k]>0) {
+									if(pre_z[kMap[i][j][k]-1] < q.synZscore[q.curTps][i][j][k]) {
+										pre_z[kMap[i][j][k]-1] = q.synZscore[q.curTps][i][j][k];
+									}
+								}else {
+									zMap[i][j][k] = 0;
+									kMap[i][j][k] = 0;
+								}
+							}
+						}
+					}
+				}
+				for (int j = nVoxels-1; j >= 0; j--)
+				{
+					if ( CT.outputArray[j] > 0) {
+						rmder = j % nPixels;
+						z = j / nPixels;
+						y=rmder/width;
+						x=rmder-y*width;
+						if (kMap[z][y][x]>0) {
+							if (pre_z[kMap[z][y][x]-1]>0)
+								zMap[z][y][x] = CT.zscore[j] + pre_z[kMap[z][y][x]-1];
+							else {
+								zMap[z][y][x] = 0;
+								kMap[z][y][x] = 0;
+							}
+							if (thrZ > zMap[z][y][x])
+								thrZ = zMap[z][y][x];
+						}
+						else {
+							CT.outputArray[j] = 0;
+						}
+					}
 				}
 			}
-		}else {
+		}else 
+		{
 			for (int j = nVoxels-1; j >= 0; j--)
 			{
 				if ( CT.outputArray[j] > 0) {
