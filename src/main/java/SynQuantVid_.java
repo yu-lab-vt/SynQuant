@@ -50,7 +50,8 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 	double slideThrZ;
 	int [][][] sliderSynMap; 	// synapse map after post-processing
 	int way2combinePostPre = 1; // the way to combine pre- and post-channel, 0:intersect, 1: add pre-zscore to post-zscore
-	
+	double ExtendedDistance=0; // extended distance
+	double zAxisMultiplier=1; // z axis extended distance multiplier
 	
 	boolean fastflag = true; //true: no use because we only use fast version
 	
@@ -89,6 +90,8 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		String[] combinePrePostChl = {"intersect", "post_channel_mainly","Null"};
 		gd.addChoice("Way to combine:", combinePrePostChl, combinePrePostChl[combinePrePostChl.length-1]);
 		gd.addChoice("Dendrite channel", openData, openData[activeImageIDs.length]);
+		gd.addNumericField("Extended distance: ", 0, 2);//0 as no extended distance
+		gd.addNumericField("z distance multiplier: ", 1, 2);// 1, treat z distance the same as x-y distance
 		gd.showDialog();
 		if (gd.wasCanceled()){
 			return false;
@@ -109,6 +112,9 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 		if (way2combinePostPre>1) //user forget to set or single channel
 			way2combinePostPre = 1;
 		int den_chl = gd.getNextChoiceIndex();
+		
+		ExtendedDistance = gd.getNextNumber();
+		zAxisMultiplier = gd.getNextNumber();
 		
 		numChannels = 2; // we only care two channels: post- and pre-synaptic channel
 		impVec = new ImagePlus[2]; // we only care two channels: pre- and post-synaptic channel
@@ -160,6 +166,10 @@ public class SynQuantVid_ implements PlugIn, DialogListener{
 	public void synQuant3D_real() {
 		//// parameter initialization
 		paraQ3D q = new paraQ3D(numChannels, way2combinePostPre, 0.8);
+		
+		q.ExtendedDistance=ExtendedDistance;
+		q.zAxisMultiplier=zAxisMultiplier;
+		
 		BasicMath bm = new BasicMath();
 		//// data saving final results
 		slideThrZ = 1000;

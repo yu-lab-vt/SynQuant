@@ -17,6 +17,10 @@ public class paraQ3D{
     public int curTps = 0; // indicate which time point we are processing if each channel is a video. start from 0 to t-1
     public double varRatio = 0.05; // use the 0.1 location in y=a*x+b to estimate the noise
     public double varRatioBased = 0;
+    
+    public double ExtendedDistance=0; // extended distance
+    public double zAxisMultiplier=1; // z axis extended distance multiplier
+    
     public void init(short [][] pixels, double Lx,int inntry, int height, int width) {
     	double tmpMax=0;
     	for(int i = 0;i<pixels.length;i++)

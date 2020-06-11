@@ -88,6 +88,11 @@ public class fastppsdcore3D{
 				}
 			}else
 			{
+				if(q.ExtendedDistance>0) {
+					ExtendPreChannelResult NewPre=new ExtendPreChannelResult(q);
+					q.synZscore=NewPre.ExtendedResult;
+				}
+				
 				double[] pre_z = new double[nSyn0];
 				for(int i=0; i< pre_z.length; i++)
 					pre_z[i] = 0;
