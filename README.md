@@ -76,7 +76,7 @@ For more information, check out our [paper](https://academic.oup.com/bioinformat
 
 # Updates
 Version 1.2.6 (6/11/2020)
-* Allow exteneded distance for the "intersect" channel combination method.
+* Add extending distance for the "intersect" channel combination method.
 
 Version 1.2
 * Allow for the detection of pre-, post-synaptic puncta and synaptic sites.
