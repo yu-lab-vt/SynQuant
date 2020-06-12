@@ -1,3 +1,22 @@
+# SynQuant
+
+----------------------------------
+
+SynQuant is a Fiji plugin that automatically quantify synapses from fluorescence microscopy images.
+
+- [Welcome to SynQuant](#Welcome-to-SynQuant)
+- [Why SynQuant](#Why-SynQuant)
+  - [*Versatile* and works with *difficult* data](#Versatile-and-works-with-difficult-data)
+  - [Unsupervised, but works as good as (or better than) supervised methods](#Unsupervised-but-works-as-good-as-or-better-than-supervised-methods)
+  - [Statistical significance for each punctum](#Statistical-significance-for-each-punctum)
+  - [Easy to use](#Easy-to-use)
+- [Getting started](#Getting-started)
+- [Images and datasets](#Images-and-datasets)
+- [Algorithm overview](#Algorithm-overview)
+- [Updates](#Updates)
+- [Reference](#Reference)
+
+
 # Welcome to SynQuant
 SynQuant is a Fiji plugin that automatically quantify synapses from fluorescence microscopy images. [Try SynQuant Now!](#Getting-started)
 
@@ -75,6 +94,9 @@ For more information, check out our [paper](https://academic.oup.com/bioinformat
 
 
 # Updates
+Version 1.2.6 [6/11/2020]
+* Add extending distance for the "intersect" channel combination method.
+
 Version 1.2
 * Allow for the detection of pre-, post-synaptic puncta and synaptic sites.
 * Add the function of combining pre-, post-synaptic puncta detection results.
