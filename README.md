@@ -1,4 +1,4 @@
-![logo](img/logo1.png)
+![logo](img/logo2.png)
 
 ----------------------------------
 
