@@ -1,10 +1,7 @@
--[Welcome to SynQuant](#Welcome-to-SynQuant)
-
--[Why SynQuant](#Why-SynQuant)
-
---[*Versatile* and works with *difficult* data](#*Versatile*-and-works-with-*difficult*-data)
-
--[Getting started](#Getting-started)
+- [Welcome to SynQuant](#Welcome-to-SynQuant)
+- [Why SynQuant](#Why-SynQuant)
+ -- [*Versatile* and works with *difficult* data](#*Versatile*-and-works-with-*difficult*-data)
+- [Getting started](#Getting-started)
 
 
 # Welcome to SynQuant
