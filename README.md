@@ -67,7 +67,7 @@ For more details, download our user guide [here](https://drive.google.com/file/d
 3. Open Fiji and load the image. 
 4. Open `SynQuantVid` from the `plugins` menu.
 5. Check out the [user guide](https://drive.google.com/file/d/17e56-Go4kkm6A6cvvN1lt57hN85hu8K5/view?usp=sharing).
-
+6. Check out the [Simple Video Demo](https://drive.google.com/file/d/1nVMPiRUjSMq6acZgAvoXQvqYLPtUnC4w/view?usp=sharing).
 
 # Images and datasets
 ## Example images
