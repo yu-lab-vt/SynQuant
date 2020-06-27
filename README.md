@@ -66,7 +66,7 @@ For more details, download our user guide [here](https://drive.google.com/file/d
 2. Put the downloaded jar file to the `plugin` folder of Fiji.
 3. Open Fiji and load the image. 
 4. Open `SynQuantVid` from the `plugins` menu.
-5. Check out the [user guide](https://drive.google.com/file/d/1YND2SoC8yUhU6LBVBY-8TO1Wul8f0TnO/view?usp=sharing).
+5. Check out the [user guide](https://drive.google.com/file/d/17e56-Go4kkm6A6cvvN1lt57hN85hu8K5/view?usp=sharing).
 
 
 # Images and datasets
