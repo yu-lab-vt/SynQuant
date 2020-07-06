@@ -94,6 +94,9 @@ For more information, check out our [paper](https://academic.oup.com/bioinformat
 
 
 # Updates
+Version 1.2.7 [7/3/2020]
+* When users open SynQuant without any valid image, it  will give users a notification..
+
 Version 1.2.6 [6/11/2020]
 * Add extending distance for the "intersect" channel combination method.
 
