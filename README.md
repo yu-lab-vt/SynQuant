@@ -94,6 +94,9 @@ For more information, check out our [paper](https://academic.oup.com/bioinformat
 
 
 # Updates
+Version 1.2.8 [7/30/2020]
+* Fixed the bug that SynQuant can’t get any result when the input images don’t contain any noise.
+
 Version 1.2.7 [7/3/2020]
 * When users open SynQuant without any valid image, it  will give users a notification..
 
