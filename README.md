@@ -2,7 +2,7 @@
 
 ----------------------------------
 
-SynQuant is a Fiji plugin that automatically quantify synapses from fluorescence microscopy images. If you have any question, you are welcome to eitehr post on the Issues section or directly send email to yug@vt.edu .
+SynQuant is a Fiji plugin that automatically quantify synapses from fluorescence microscopy images. If you have any question, you are welcome to eitehr post on the Issues section or directly send email to yug@vt.edu (Guoqiang Yu).
 
 - [Welcome to SynQuant](#Welcome-to-SynQuant)
 - [Why SynQuant](#Why-SynQuant)
