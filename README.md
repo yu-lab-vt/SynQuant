@@ -72,7 +72,7 @@ For more details, download our user guide [here](https://drive.google.com/file/d
 
 # Images and datasets
 ## Example images
-Example data for testing SynQuant plugin can be found [here](https://drive.google.com/drive/folders/1IZS_1Vp3o54NBx0doTdjhUTt_hvUxi9b?usp=sharing).
+Example data for testing the SynQuant plugin can be found [here](https://drive.google.com/drive/folders/1IZS_1Vp3o54NBx0doTdjhUTt_hvUxi9b?usp=sharing).
 
 ## Synthetic and real data used in the paper
 Click [here](https://github.com/yu-lab-vt/SynQuant-data) to get the following things related to the experiments in [1]:
@@ -94,7 +94,7 @@ For more information, check out our [paper](https://academic.oup.com/bioinformat
 ![Tree based detection and segmentation algorithm](img/tree.png)
 
 # Batch processing
-For processing large amounts of data, consider calling SynQuant core functions from MATLAB. An example is given [here](https://github.com/freemanwyz/SynQuant_MATLAB_Java). Note that this only contains a subset of the features of the Fiji plug-in, and does not provide a GUI. For a smaller amount of images, it is better to use the Fiji plug-in.
+For processing large amounts of data, you may wish to write some scripts in ImageJ. Another choice is to call SynQuant Java classes directly from MATLAB. An example is given [here](https://github.com/freemanwyz/SynQuant_MATLAB_Java). Note that this only contains a subset of the features of the Fiji plug-in, and does not provide a GUI. For a smaller amount of images, it is better to use the Fiji plug-in.
 
 You may also try to call SynQuant using the Python-ImageJ interface [PyImageJ](https://github.com/imagej/pyimagej), but we have not tested that yet.
 
@@ -103,7 +103,7 @@ Version 1.2.8 [7/30/2020]
 * Fixed the bug that SynQuant can’t get any result when the input images don’t contain any noise.
 
 Version 1.2.7 [7/3/2020]
-* When users open SynQuant without any valid image, it  will give users a notification..
+* When users open SynQuant without any valid image, it will give users a notification.
 
 Version 1.2.6 [6/11/2020]
 * Add extending distance for the "intersect" channel combination method.
@@ -129,21 +129,21 @@ Version 1.1
 
 [3] Collman, F., Buchanan, J., Phend, K. D., Micheva, K. D., Weinberg, R. J., & Smith, S. J. (2015). Mapping synapses by conjugate light-electron array tomography. Journal of Neuroscience, 35(14), 5792-5807.
 
-[4] Mizuno, G. O., Wang, Y., Shi, G., Wang, Y., Sun, J., Papadopoulos, S., ... & Bhattacharyya, A. (2018). Aberrant calcium signaling in astrocytes inhibits neuronal excitability in a human Down syndrome stem cell model. Cell reports, 24(2), 355-365.
+[4] Mizuno, G. O., Wang, Y., Shi, G., Wang, Y., Sun, J., Papadopoulos, S., ... & Bhattacharyya, A. (2018). Aberrant calcium signaling in astrocytes inhibits neuronal excitability in a human Down syndrome stem cell model. Cell Reports, 24(2), 355-365.
 
 ## Peer methods: unsupervised
 [5] Zhang, B., et al. (2007) Multiscale variance-stabilizing transform for mixed-Poisson-Gaussian processes and its applications in bioimaging. Image Processing, 2007 IEEE International Conference on, VI-233-VI-236.
 
 [6] Rezatofighi, S., et al. (2012) A new approach for spot detection in total internal reflection fluorescence microscopy. Biomedical Imaging (ISBI), 2012 9th IEEE International Symposium on, 860-863.
 
-[7] Schmitz, S., et al. "Automated analysis of neuronal morphology, synapse number and synaptic recruitment." Journal of neuroscience methods 195 (2011): 185-193.
+[7] Schmitz, S., et al. "Automated analysis of neuronal morphology, synapse number and synaptic recruitment." Journal of Neuroscience Methods 195 (2011): 185-193.
 
-[8] Simhal, AK., et al. "Probabilistic fluorescence-based synapse detection." PLoS computational biology 13.4 (2017).
+[8] Simhal, AK., et al. "Probabilistic fluorescence-based synapse detection." PLoS Computational Biology 13.4 (2017).
 
 ## Peer methods: supervised
 [9] Bass, C., Helkkula, P., De Paola, V., Clopath, C., & Bharath, A. A. (2017). Detection of axonal synapses in 3d two-photon images. PloS one, 12(9).
 
-[10] Kulikov, V., Guo, S. M., Stone, M., Goodman, A., Carpenter, A., Bathe, M., & Lempitsky, V. (2019). DoGNet: A deep architecture for synapse detection in multiplexed fluorescence images. PLoS computational biology, 15 (5).
+[10] Kulikov, V., Guo, S. M., Stone, M., Goodman, A., Carpenter, A., Bathe, M., & Lempitsky, V. (2019). DoGNet: A deep architecture for synapse detection in multiplexed fluorescence images. PLoS Computational Biology, 15 (5).
 
 [11] Ronneberger, O., et al. "U-net: Convolutional networks for biomedical image segmentation." International Conference on Medical image computing and computer-assisted intervention. Springer, Cham, 2015.
 
