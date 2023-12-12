@@ -2,7 +2,7 @@
 
 ----------------------------------
 
-SynQuant is a Fiji plugin that automatically quantify synapses from fluorescence microscopy images. If you have any feedback or issue, you are welcome to either post issue in Issues section or send email to yug@vt.edu (Guoqiang Yu at Virginia Tech).
+SynQuant is a Fiji plugin that automatically quantifies synapses from fluorescence microscopy images. If you have any feedback or issues, you are welcome to either post an issue in the Issues section or send an email to yug@vt.edu (Guoqiang Yu at Virginia Tech).
 
 - [Welcome to SynQuant](#Welcome-to-SynQuant)
 - [Why SynQuant](#Why-SynQuant)
@@ -81,17 +81,21 @@ Click [here](https://github.com/yu-lab-vt/SynQuant-data) to get the following th
 * Code to generate synthetic data
 
 # Algorithm overview
-SynQuant detect synapses through an unsupervised probability principled framework. In this framework, analysis is conducted on salient regions rather than pixels. 
+SynQuant detects synapses through an unsupervised probability principled framework. In this framework, analysis is conducted on salient regions rather than pixels. 
 
-All synapse candidates are scored by order statistics which combine the information of size, local contrast and noise level. What’s more, p-value or z-score to determine synapse selection, which provides a statistical evidence of the detected synapse. 
+All synapse candidates are scored by order statistics which combine the information of size, local contrast, and noise level. What’s more, p-value or z-score to determine synapse selection, which provides statistical evidence of the detected synapse. 
 The parameter used in this framework is only the threshold of p-value or z-score which is statistically meaningful and easy to tune. 
 
-The framework of synapse detection algorithm now is based on the idea of component tree which scales well to 3D data. 
+The framework of the synapse detection algorithm now is based on the idea of the component tree which scales well to 3D data. 
 
 For more information, check out our [paper](https://academic.oup.com/bioinformatics/article/36/5/1599/5584198). For citation, see reference [1].
 
 ![Tree based detection and segmentation algorithm](img/tree.png)
 
+# Batch processing
+For processing large amounts of data, consider calling SynQuant core functions from MATLAB. An example is given [here](https://github.com/freemanwyz/SynQuant_MATLAB_Java). Note that this only contains a subset of the features of the Fiji plug-in, and does not provide a GUI. For a smaller amount of images, it is better to use the Fiji plug-in.
+
+You may also try to call SynQuant using the Python-ImageJ interface [PyImageJ](https://github.com/imagej/pyimagej), but we have not tested that yet.
 
 # Updates
 Version 1.2.8 [7/30/2020]
@@ -108,8 +112,8 @@ Version 1.2
 * Add the function of combining pre-, post-synaptic puncta detection results.
 * Support of puncta detection for both 2D and 3D data in the same plugin.
 * Add one more noise estimation/stabilization method.
-* Add two more input parameters for user to tune their targets' shapes.
-* Add a slider for user to post-process results based on z-score.
+* Add two more input parameters for the user to tune their targets' shapes.
+* Add a slider for the user to post-process results based on the z-score.
 
 Version 1.1
 * Add the component tree structure for synapse detection suggested by Dr.Petter Ranefall. 3 times faster than before
