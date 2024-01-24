@@ -19,7 +19,7 @@ SynQuant is a Fiji plugin that automatically quantifies synapses from fluorescen
 
 
 # Welcome to SynQuant
-SynQuant is a Fiji plugin that automatically quantify synapses from fluorescence microscopy images. [Try SynQuant Now!](#Getting-started)
+SynQuant is a Fiji plugin that automatically quantifies synapses from fluorescence microscopy images. [Try SynQuant Now!](#Getting-started)
 
 Any problem? SynQuant does not work on your data? 
 Please open an issue. We are happy to help!
@@ -39,9 +39,9 @@ Please open an issue. We are happy to help!
 
 ## Unsupervised, but works as good as (or better than) supervised methods
 * SynQuant performs better than peer unsupervised methods [5-8] for all the three data sets we tested (3D *in-vivo* [2], array tomography [3], neuron-astrocyte coculture [4]).
-* SynQuant is performs similar with the best performing supervised method [10] in terms of F1 score and works better than it in terms of average precision.
+* SynQuant performs similarly to the best-performing supervised method [10] in terms of F1 score and works better than it in terms of average precision.
 * SynQuant outperforms other supervised methods [9,11].
-<!-- * Training an supervised methods is non-trivial: sufficient training labels, experimenting with all kinds of network architectures or feature extraction algorithms, and somehow boring parameter tuning.  -->
+<!-- * Training and supervised methods are non-trivial: sufficient training labels, experimenting with all kinds of network architectures or feature extraction algorithms, and somehow boring parameter tuning.  -->
 <!-- * **We suggest trying SynQuant on your data before using the supervised methods**. -->
 
 ## Statistical significance for each punctum
@@ -50,13 +50,13 @@ Please open an issue. We are happy to help!
 
 ## Easy to use
 * User friendly Fiji plug-in
-* Export detected puncta to ROI manager
-* For 2D image, SynQuant can trace neurites as well
-* Coming soon: Have lots of images? It is easy to to call the Java class of SynQuant in your MATLAB code.
+* Export detected puncta to the ROI manager
+* For 2D images, SynQuant can trace neurites as well
+* Coming soon: Have lots of images? It is easy to call the Java class of SynQuant in your MATLAB code.
 
 <!-- # Getting started
 1. Download the Fiji plugin [here](https://github.com/yu-lab-vt/SynQuant/releases).
-2. Put the downloaded jar file to the plugin folder of Fiji.
+2. Put the downloaded jar file in the plugin folder of Fiji.
 3. Open Fiji and load the data. Then open SynQuantVid from the plugins menu.
 
 For more details, download our user guide [here](https://drive.google.com/file/d/1YND2SoC8yUhU6LBVBY-8TO1Wul8f0TnO/view?usp=sharing). -->
@@ -64,7 +64,7 @@ For more details, download our user guide [here](https://drive.google.com/file/d
 # Getting started
 1. [Downlaod SynQuant](https://github.com/yu-lab-vt/SynQuant/releases). 
     * If you do not have Fiji yet, get it [here](https://fiji.sc/).
-2. Put the downloaded jar file to the `plugin` folder of Fiji.
+2. Put the downloaded jar file in the `plugin` folder of Fiji.
 3. Open Fiji and load the image. 
 4. Open `SynQuantVid` from the `plugins` menu.
 5. Check out the [user guide](https://drive.google.com/file/d/17e56-Go4kkm6A6cvvN1lt57hN85hu8K5/view?usp=sharing).
@@ -94,7 +94,9 @@ For more information, check out our [paper](https://academic.oup.com/bioinformat
 ![Tree based detection and segmentation algorithm](img/tree.png)
 
 # Batch processing
-For processing large amounts of data, you may wish to write some scripts in ImageJ. Another choice is to call SynQuant Java classes directly from MATLAB. An example is given [here](https://github.com/freemanwyz/SynQuant_MATLAB_Java). Note that this only contains a subset of the features of the Fiji plug-in, and does not provide a GUI. For a smaller amount of images, it is better to use the Fiji plug-in.
+For processing large amounts of data, you may wish to write some scripts in ImageJ. In this case, a [simplified version of SynQuant](https://github.com/freemanwyz/SynQuantSimple) might be useful.
+
+Another choice is to call SynQuant Java classes directly from MATLAB. An example is given [here](https://github.com/freemanwyz/SynQuant_MATLAB_Java). Note that this only contains a subset of the features of the Fiji plug-in, and does not provide a GUI. For a smaller amount of images, it is better to use the Fiji plug-in.
 
 You may also try to call SynQuant using the Python-ImageJ interface [PyImageJ](https://github.com/imagej/pyimagej), but we have not tested that yet.
 
