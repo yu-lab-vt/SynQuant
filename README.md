@@ -62,13 +62,13 @@ Please open an issue. We are happy to help!
 For more details, download our user guide [here](https://drive.google.com/file/d/1YND2SoC8yUhU6LBVBY-8TO1Wul8f0TnO/view?usp=sharing). -->
 
 # Getting started
-1. [Downlaod SynQuant](https://github.com/yu-lab-vt/SynQuant/releases). 
-    * If you do not have Fiji yet, get it [here](https://fiji.sc/).
+1. If you do not have Fiji yet, get it [here](https://fiji.sc/).
+2. Downlaod SynQuant [here](https://github.com/yu-lab-vt/SynQuant/releases). Note that we need to download the `SynQuant_xxx.jar` file, not the source code.
 2. Put the downloaded jar file in the `plugin` folder of Fiji.
-3. Open Fiji and load the image. 
+3. Open Fiji and load the image. If your image contains multiple channels, you need to first split the channels.
 4. Open `SynQuantVid` from the `plugins` menu.
-5. Check out the [user guide](https://drive.google.com/file/d/17e56-Go4kkm6A6cvvN1lt57hN85hu8K5/view?usp=sharing).
-6. Check out the [Simple Video Demo](https://drive.google.com/file/d/1nVMPiRUjSMq6acZgAvoXQvqYLPtUnC4w/view?usp=sharing).
+5. Specify which channel is pre-synaptic, which is post-synaptic (optional), and which is dendrite (optiional), and run SynQuant.
+6. For more details, check out the [user guide](https://drive.google.com/file/d/17e56-Go4kkm6A6cvvN1lt57hN85hu8K5/view?usp=sharing). Also check out the [Simple Video Demo](https://drive.google.com/file/d/1nVMPiRUjSMq6acZgAvoXQvqYLPtUnC4w/view?usp=sharing).
 
 # Images and datasets
 ## Example images
